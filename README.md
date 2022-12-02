@@ -1,3 +1,5 @@
+![test](linkmerchsplash.png)
+
 ## Project Overview
 
 This website will allow users to purchase items (cloths, stickers, etc.) and with those items will be generated a unique QR code associated with that user. The website will generate a page associated with that QR code with a chosen template that the user will be able to access and edit in order to share it with others. When a user makes subsequent purchases, they can use one of their previous QR codes or generate more. The user will have a limit to how many QR codes they can make, but can edit their pages at will. The website will achieve this via Django's dynamic URL patterns. The website will use be using Vue with Django REST framework.
