@@ -1,4 +1,4 @@
-![test](linkmerchsplash.png)
+![link merch plash image](linkmerchsplash.png)
 
 ## Project Overview
 
