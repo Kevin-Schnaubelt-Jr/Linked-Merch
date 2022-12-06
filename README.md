@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This website will allow users to purchase items (cloths, stickers, etc.) and with those items, generated a unique QR code that will be displayed along with the designs of the item. The website will generate a page associated with that QR code with a chosen template that the user will be able to access and edit, giving them a personalized webpage to share with anyone that scans their item.
+This website will allow users to purchase items (cloths, stickers, etc.) and with those items, generate a unique QR code that will be displayed along with the designs of the item. The website will generate a page associated with that QR code with a chosen template that the user will be able to access and edit, giving them a personalized webpage to share with anyone that scans their item.
 
 Whether it's a business card that links to a more verbose page about who they are along with their social media links, a sticker sold locally by an artist that contains their music or a gallery of their art, a shirt for kids that contains emergency contact information in case they get lost, or just an advertisement for your local business on the back of your shirt that someone can scan while waiting behind you in line, the website will allow anyone to incorporate technology into their everyday things.
 
