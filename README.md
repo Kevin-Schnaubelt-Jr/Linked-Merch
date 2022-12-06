@@ -2,16 +2,40 @@
 
 ## Project Overview
 
-This website will allow users to purchase items (cloths, stickers, etc.) and with those items will be generated a unique QR code associated with that user. The website will generate a page associated with that QR code with a chosen template that the user will be able to access and edit in order to share it with others. When a user makes subsequent purchases, they can use one of their previous QR codes or generate more. The user will have a limit to how many QR codes they can make, but can edit their pages at will. The website will achieve this via Django's dynamic URL patterns. The website will use be using Vue with Django REST framework.
+This website will allow users to purchase items (cloths, stickers, etc.) and with those items, generated a unique QR code that will be displayed along with the designs of the item. The website will generate a page associated with that QR code with a chosen template that the user will be able to access and edit, giving them a personalized webpage to share with anyone that scans their item.
+
+Whether it's a business card that links to a more verbose page about who they are along with their social media links, a sticker sold locally by an artist that contains their music or a gallery of their art, a shirt for kids that contains emergency contact information in case they get lost, or just an advertisement for your local business on the back of your shirt that someone can scan while waiting behind you in line, the website will allow anyone to incorporate technology into their everyday things.
 
 ## Functionality
 
-The user will be brought to their profile on sign up, and from there, they will generate a QR code with a chosen template. After which, they can browse the store and, before checkout, assign a QR code to that purchase.
+The user will be able to browse the marketplace from the homepage. From there, they can also sign up or log into their account. On their profile page, they will be able to generate unique URL paths to chosen templates. When they do so, a link to those URL paths will be provided, as well as a QR code image associated with the path that may be saved and used as desired.  On those pages, the users who created them will be able to edit the template that renders on the page. Anyone with a link to the page will be able to see what information its author has filled out there.
+
+All the items in the store have locations where a QR code is displayed. Upon purchase of an item, a user picks one of their QR codes to be dispalyed on the item. 
+Their QR codes are then placed on the item and shipped to the customer.
 
 ## Data Model
 
-The users model will need a model for storing the user's QR codes, as well as everything that goes with purchases (i.e purchase history). There will also need to be a model for admin to access what was purchases, by who, and with what QR code (unique site url) in order to integrate it into the order.
+***models listed are for 3 week milestone***
+#### CustomUserModel
+- username *CharField*
+- first name *CharField*
+- last name *CharField*
+- email *EmailField*
+- *nested ***Custom Urls****
+
+#### CustomURLs
+- unique_key *CharField*
+- template_key *IntegerField*
+- *nested ***Custom Users***
 
 ## Schedule
 
-the First milestone will be a demo showing the ability to create custom QR codes with a user system, as well as the first initial template, which will just be emergency contact information.
+#### WEEK 1 ( Due Monday, December 12)
+- Complete Django intilization with Custom User and Custom URL models created.
+
+#### WEEK 2 (Due Monday, December 19)
+- Complete intial template and hook up dynamic URL path navigation.
+
+#### Week 3 (Due Friday, December 23)
+- Deploy Demo
+- Start basic styling
