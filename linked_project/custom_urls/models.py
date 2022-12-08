@@ -8,4 +8,4 @@ class URLS(models.Model):
     author = models.ForeignKey(CustomUser, related_name="custom_urls", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return self.unique_key
