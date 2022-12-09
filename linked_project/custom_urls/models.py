@@ -9,3 +9,12 @@ class URLS(models.Model):
 
     def __str__(self):
         return self.unique_key
+
+
+class EmergencyName(models.Model):
+    descriptor = models.CharField(max_length=200, null=True)
+    name = models.CharField(max_length=200)
+    url = models.ForeignKey(URLS, related_name="emergency_name", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.descriptor
