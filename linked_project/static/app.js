@@ -5,6 +5,8 @@ const app = Vue.createApp({
             currentUser: {},
             csrfToken: '',
             urls: [],
+            emergencyNames: [],
+            pageKey: '',
             newUrl: {
                 "unique_key" : "",
                 "template_key": 0,
@@ -73,12 +75,31 @@ const app = Vue.createApp({
                 result += characters.charAt(Math.floor(Math.random() * charactersLength))
             }
             return result
-        }
-
+        },
+        loadNames(){
+            axios({
+                method: 'get',
+                url: '/api/v1/emergency_names/'
+            }).then(response => {
+                this.emergencyNames = response.data
+                console.log('emergency_names',response.data)
+                }
+            ).catch(error => {
+    
+                console.log(error.response)
+             
+            })
+        },
+        test(key){
+            console.log(key)
+        },
     },
     created: function() {
         this.loadUrls()
-        
+        this.loadNames()
+        console.log('created')
+   
+         
     },
     mounted(){
         this.csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value
