@@ -5,14 +5,15 @@ const app = Vue.createApp({
             currentUser: {},
             csrfToken: '',
             urls: [],
-            emergencyNames: [],
-            pageKey: '',
             newUrl: {
                 "unique_key" : "",
                 "template_key": 0,
                 "author": "",
             },
-            qrCount: 0
+            qrCount: 0,
+            emergencyNames: [],
+            emergencyNameInputField: '',
+            emergencyNameDescriptorInputField: ''
         }
     },
     methods: {
@@ -22,7 +23,7 @@ const app = Vue.createApp({
                 url: '/api/v1/custom_urls/'
             }).then(response => {
                 this.urls = response.data
-                console.log(response.data)
+                console.log('get data', response.data)
                 this.loadCurrentUser()
                 }
             ).catch(error => {
@@ -66,6 +67,12 @@ const app = Vue.createApp({
               
                 console.log(error.response)
             })
+            if (document.querySelector('#user-auth-p').innerHTML == 'true'){
+                console.log('is true')
+            }
+            else{
+                console.log('isnt owkrin')
+            }
         },
         randomKeyGenerator(){
             let result = ''
@@ -90,9 +97,49 @@ const app = Vue.createApp({
              
             })
         },
-        test(key){
-            console.log(key)
+        test(){
+            console.log('we here')
         },
+        
+        // EMERGENCY NAME CRUDS
+        newNameInputFieldReveal(){
+            document.querySelector('#new-emergency-name-button').style.display = "none"
+            document.querySelector('#make-new-emergency-name-div').style.display = 'block'
+            console.log('new input field')
+        },
+        createName(){
+            console.log('yo',typeof parseInt(document.querySelector('#page-key').innerHTML),parseInt(document.querySelector('#page-key').innerHTML))
+            axios({
+                method: 'post',
+                url: '/api/v1/emergency_names/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    descriptor: this.emergencyNameDescriptorInputField,
+                    name: this.emergencyNameInputField,
+                    url: parseInt(document.querySelector('#page-key').innerHTML)
+                }
+            }).then(response => {
+                this.loadUrls()
+                console.log('posted', response.data)
+                document.querySelector('#new-emergency-name-button').style.display = "block"
+                document.querySelector('#make-new-emergency-name-div').style.display = 'none'
+    
+            })
+        },
+        deleteName(id){
+            axios({
+                method: 'delete',
+                url: '/api/v1/emergency_names/' + id,
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                }
+            }).then(response => {
+                console.log('workin')
+                this.loadUrls()
+            })
+        }
     },
     created: function() {
         this.loadUrls()
@@ -101,8 +148,11 @@ const app = Vue.createApp({
    
          
     },
+
+
     mounted(){
         this.csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value
+
         console.log('MOUNTED')
        
     }
