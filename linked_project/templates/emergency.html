@@ -5,9 +5,28 @@
 <div v-if="'{{key}}' == '0kzjyprPzJotBXNx9aBt'">
     <h1>!{{key}}!</h1>
 </div>
-<button @click="test('{{key}}')">button</button>
-<h1>here at emergency [[qrCount]] WONDOooo</h1>
-<button></button>
+<p>[[currentUser.username]]</p>
+<div id="names-div" v-for="people in urls" >
+    <div v-if="people.unique_key === '{{key}}'" class="border p-[1rem]">
+        <p id="page-key"  class="hidden">[[people.id]]</p>
+        <div v-for="person in people.name_detail">
+            <p>
+                [[person.descriptor]]
+                <span>[[person.name]]</span>
+            </p>
+            <button v-if="people.author_detail.username == currentUser.username" @click="deleteName(person.id)" class="fa-regular fa-circle-xmark" ></button>
+        </div>
+        <div class="border">
+            <button id="new-emergency-name-button" v-if="people.author_detail.username == currentUser.username" @click="newNameInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">New Name Field Button</button>
+            <div id="make-new-emergency-name-div" class="hidden">
+                <input type="text" v-model="emergencyNameDescriptorInputField"  placeholder="descriptor" class="border">[[this.emergencyNameInputField]]</input>
+                <input type="text" v-model="emergencyNameInputField" placeholder="name" class="border">[[this.emergencyNameDescriptorInputField]]</input>
+                <button  @click="createName(pageKeyid)">submit</button>
+            </div>
+        
+        </div>
+    </div>
+</div>
 
 
 

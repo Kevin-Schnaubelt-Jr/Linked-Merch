@@ -17,4 +17,4 @@ class EmergencyName(models.Model):
     url = models.ForeignKey(URLS, related_name="emergency_name", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.descriptor
+        return self.url.unique_key
