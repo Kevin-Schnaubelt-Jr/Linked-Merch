@@ -16,14 +16,33 @@
             </p>
             <button v-if="people.author_detail.username == currentUser.username" @click="deleteName(person.id)" class="fa-regular fa-circle-xmark" ></button>
         </div>
-        <div class="border">
+        <div id="name-create-field" class="border">
             <button id="new-emergency-name-button" v-if="people.author_detail.username == currentUser.username" @click="newNameInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">New Name Field Button</button>
             <div id="make-new-emergency-name-div" class="hidden">
-                <input type="text" v-model="emergencyNameDescriptorInputField"  placeholder="descriptor" class="border">[[this.emergencyNameInputField]]</input>
-                <input type="text" v-model="emergencyNameInputField" placeholder="name" class="border">[[this.emergencyNameDescriptorInputField]]</input>
+                <input type="text" v-model="emergencyNameDescriptorInputField"  placeholder="descriptor" class="border">[[this.emergencyNameDescriptorInputField]]</input>
+                <input type="text" v-model="emergencyNameInputField" placeholder="name" class="border">[[this.emergencyNameInputField]]</input>
                 <button  @click="createName(pageKeyid)">submit</button>
             </div>
         
+        </div>
+        <div id="phones-print-div" v-for="(phone, index) in emergencyPhones">
+            <div v-if="phone.url == people.id">
+                <p >
+                    [[phone.descriptor]]
+                    <span >[[phone.formatted_phone]]</span>
+                    
+                </p>
+                <button v-if="people.author_detail.username == currentUser.username" @click="deletePhoneNumber(phone.id)" class="fa-regular fa-circle-xmark" ></button>
+            </div>
+        </div>
+        <div id="phone-create-field" class="border">
+            <button id="new-emergency-phone-button" v-if="people.author_detail.username == currentUser.username" @click="newPhoneInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">New Phone Field Button</button>
+            <div id="make-new-emergency-phone-div" class="hidden">
+                <input type="text" v-model="emergencyPhoneDescriptorInputField"  placeholder="descriptor" class="border">[[this.emergencyPhoneDescriptorInputField]]</input>
+                <input type="text" v-model="emergencyPhoneInputField" placeholder="enter phone number" type="tel" class="border">[[this.emergencyPhoneInputField]]</input>
+                <button  @click="createPhoneNumber(pageKeyid)">submit</button>
+            </div>
+
         </div>
     </div>
 </div>
