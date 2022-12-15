@@ -19,7 +19,14 @@ const app = Vue.createApp({
             emergencyPhones: [],
             emergencyPhonesFormat: [],
             emergencyPhoneInputField: '',
-            emergencyPhoneDescriptorInputField: ''
+            emergencyPhoneDescriptorInputField: '',
+
+            emergencyAddresses: [],
+            emergencyAddressDescriptorInputField: '',
+            emergencyAddressStreetField: '',
+            emergencyAddressCityField: '',
+            emergencyAddressStateField: '',
+            emergencyAddressZipCodeField: ''
         }
     },
     methods: {
@@ -112,6 +119,21 @@ const app = Vue.createApp({
             })
        
 
+        },
+        loadAddresses(){
+            axios({
+                method: 'get',
+                url: '/api/v1/emergency_address/'
+            }).then(response => {
+                this.emergencyAddresses = response.data
+                console.log('emergency addresses', this.emergencyAddresses)
+                
+                
+            }).catch(error => {
+                
+                console.log(error.response)
+             
+            })
         },
         formatPhones(){
             let new_string_build = ''
@@ -217,12 +239,56 @@ const app = Vue.createApp({
                 console.log('phone deleted')
                 this.loadPhones()
             })
+        },
+
+        // EMERGENCY ADDRESS CRUD
+        newAddressInputFieldReveal(){
+            document.querySelector('#new-emergency-address-button').style.display = "none"
+            document.querySelector('#make-new-emergency-address-div').style.display = 'block'
+            console.log('new input field')
+        },
+        createAddress(){
+            axios({
+                method: 'post',
+                url: '/api/v1/emergency_address/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    descriptor: this.emergencyAddressDescriptorInputField,
+                    street: this.emergencyAddressStreetField,
+                    city: this.emergencyAddressCityField,
+                    state: this.emergencyAddressStateField,
+                    zip_code: this.emergencyAddressZipCodeField,
+                    url: parseInt(document.querySelector('#page-key').innerHTML)
+                }
+            }).then(response => {
+                console.log('address created')
+                this.loadAddresses()
+                this.loadUrls()
+                document.querySelector('#new-emergency-address-button').style.display = "block"
+                document.querySelector('#make-new-emergency-address-div').style.display = 'none'
+            })
+        },
+        deleteAddress(id){
+            axios({
+                method: 'delete',
+                url: '/api/v1/emergency_address/' + id,
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                }
+            }).then(response => {
+                console.log('address deleted')
+                this.loadAddresses
+                this.loadUrls()
+            })
         }
     },
     created: function() {
         this.loadUrls()
         this.loadNames()
         this.loadPhones()
+        this.loadAddresses()
         console.log('created')
    
          

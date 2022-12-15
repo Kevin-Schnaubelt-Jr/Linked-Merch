@@ -6,18 +6,19 @@
     <h1>!{{key}}!</h1>
 </div>
 <p>[[currentUser.username]]</p>
-<div id="names-div" v-for="people in urls" >
-    <div v-if="people.unique_key === '{{key}}'" class="border p-[1rem]">
-        <p id="page-key"  class="hidden">[[people.id]]</p>
-        <div v-for="person in people.name_detail">
+{% comment %} "major-print-div" and "nested-major-print-div" are what finds the reveleant information for the current page {% endcomment %}
+<div id="major-print-div" v-for="url in urls" > {% comment %} "this loop trys to find which url's unique key matches the '{{key}}', which is the webpage you are currently on {% endcomment %}
+    <div id="nested-major-print-div" v-if="url.unique_key === '{{key}}'" class="border p-[1rem]">
+        <p id="page-key"  class="hidden">[[url.id]]</p> {% comment %} VERY IMPORTANT. "page-key" div is what allows us to refernce the url.id in javascript for making api calls currectly. {% endcomment %}
+        <div id="print-name-div" v-for="person in url.name_detail">
             <p>
                 [[person.descriptor]]
                 <span>[[person.name]]</span>
             </p>
-            <button v-if="people.author_detail.username == currentUser.username" @click="deleteName(person.id)" class="fa-regular fa-circle-xmark" ></button>
+            <button v-if="url.author_detail.username == currentUser.username" @click="deleteName(person.id)" class="fa-regular fa-circle-xmark" ></button>
         </div>
         <div id="name-create-field" class="border">
-            <button id="new-emergency-name-button" v-if="people.author_detail.username == currentUser.username" @click="newNameInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">New Name Field Button</button>
+            <button id="new-emergency-name-button" v-if="url.author_detail.username == currentUser.username" @click="newNameInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">New Name Field Button</button>
             <div id="make-new-emergency-name-div" class="hidden">
                 <input type="text" v-model="emergencyNameDescriptorInputField"  placeholder="descriptor" class="border">[[this.emergencyNameDescriptorInputField]]</input>
                 <input type="text" v-model="emergencyNameInputField" placeholder="name" class="border">[[this.emergencyNameInputField]]</input>
@@ -25,18 +26,18 @@
             </div>
         
         </div>
-        <div id="phones-print-div" v-for="(phone, index) in emergencyPhones">
-            <div v-if="phone.url == people.id">
+        <div id="print-phones-div" v-for="(phone, index) in emergencyPhones">
+            <div v-if="phone.url == url.id">
                 <p >
                     [[phone.descriptor]]
                     <span >[[phone.formatted_phone]]</span>
                     
                 </p>
-                <button v-if="people.author_detail.username == currentUser.username" @click="deletePhoneNumber(phone.id)" class="fa-regular fa-circle-xmark" ></button>
+                <button v-if="url.author_detail.username == currentUser.username" @click="deletePhoneNumber(phone.id)" class="fa-regular fa-circle-xmark" ></button>
             </div>
         </div>
         <div id="phone-create-field" class="border">
-            <button id="new-emergency-phone-button" v-if="people.author_detail.username == currentUser.username" @click="newPhoneInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">New Phone Field Button</button>
+            <button id="new-emergency-phone-button" v-if="url.author_detail.username == currentUser.username" @click="newPhoneInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">New Phone Field Button</button>
             <div id="make-new-emergency-phone-div" class="hidden">
                 <input type="text" v-model="emergencyPhoneDescriptorInputField"  placeholder="descriptor" class="border">[[this.emergencyPhoneDescriptorInputField]]</input>
                 <input type="text" v-model="emergencyPhoneInputField" placeholder="enter phone number" type="tel" class="border">[[this.emergencyPhoneInputField]]</input>
@@ -44,6 +45,29 @@
             </div>
 
         </div>
+        <div id="print-name-div" v-for="address in url.address_detail">
+            <p>[[address.descriptor]]</p>
+            <p>[[address.street]]</p>
+            <p>
+                [[address.city]]
+                <span>[[address.state]]</span>
+            </p>
+            <p>[[address.zip_code]]</p>
+            <button v-if="url.author_detail.username == currentUser.username" @click="deleteAddress(address.id)" class="fa-regular fa-circle-xmark" ></button>
+        </div>
+        <div id="address-create-field" class="border">
+            <button id="new-emergency-address-button" v-if="url.author_detail.username == currentUser.username" @click="newAddressInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">New Address Field Button</button>
+            <div id="make-new-emergency-address-div" class="hidden">
+                <input type="text" v-model="emergencyAddressDescriptorInputField"  placeholder="descriptor" class="border">[[this.emergencyAddressDescriptorInputField]]</input>
+                <input type="text" v-model="emergencyAddressStreetField" placeholder="enter street"  class="border">[[this.emergencyAddressStreetField]]</input>
+                <input type="text" v-model="emergencyAddressCityField" placeholder="enter city"  class="border">[[this.emergencyAddressCityField]]</input>
+                <input type="text" v-model="emergencyAddressStateField" placeholder="enter state"  class="border">[[this.emergencyAddressStateField]]</input>
+                <input type="text" v-model="emergencyAddressZipCodeField" placeholder="enter zip code"  class="border">[[this.emergencyAddressZipCodeField]]</input>
+                <button  @click="createAddress(pageKeyid)">submit</button>
+            </div>
+
+        </div>
+
     </div>
 </div>
 

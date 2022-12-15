@@ -27,3 +27,14 @@ class EmergencyPhoneNumbers(models.Model):
 
     def __str__(self):
         return self.url.unique_key
+
+class EmergencyAddress(models.Model):
+    descriptor = models.CharField(max_length=200, null=True)
+    street = models.CharField(max_length=200, null=True)
+    city = models.CharField(max_length=200, null=True)
+    state = models.CharField(max_length=200, null=True)
+    zip_code = models.CharField(max_length=200, null=True)
+    url = models.ForeignKey(URLS, related_name="emergency_address", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.url.unique_key
