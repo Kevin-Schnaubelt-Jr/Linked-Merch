@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from users.models import CustomUser
 
-from custom_urls.models import URLS, EmergencyName, EmergencyPhoneNumbers
+from custom_urls.models import URLS, EmergencyName, EmergencyPhoneNumbers, EmergencyAddress
 
 class NestedURLSSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,6 +23,11 @@ class NestedEmergencyPhoneNumbersSerializer(serializers.ModelSerializer):
         model = EmergencyPhoneNumbers
         fields = ('id', 'descriptor', 'phone_number', 'url')
 
+class NestedEmergencyAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmergencyAddress
+        fields = ('id', 'descriptor', 'street', 'city', 'state', 'zip_code', 'url')
+
 
 
 
@@ -30,9 +35,10 @@ class URLSSerializer(serializers.ModelSerializer):
     author_detail = NestedUserSerializer(read_only=True, source='author')
     name_detail = NestedEmergencyNameSerializer(many=True, read_only=True, source='emergency_name')
     phone_detail = NestedEmergencyPhoneNumbersSerializer(many=True, read_only=True, source='emergency_phone')
+    address_detail = NestedEmergencyAddressSerializer(many=True, read_only=True, source='emergency_address')
     class Meta:
         model = URLS
-        fields = ('id', 'unique_key', 'template_key', 'author', 'author_detail',  'name_detail', 'phone_detail')
+        fields = ('id', 'unique_key', 'template_key', 'author', 'author_detail',  'name_detail', 'phone_detail', 'address_detail')
 
 class UserSerializer(serializers.ModelSerializer):
     urls_detail = NestedURLSSerializer(many=True, source='custom_urls', read_only=True)
@@ -51,3 +57,9 @@ class EmergencyPhoneNumbersSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmergencyPhoneNumbers
         fields = ('id', 'descriptor', 'phone_number', 'url', 'urls_detail')
+
+class EmergencyAddressSerializer(serializers.ModelSerializer):
+    urls_detail = NestedURLSSerializer(many=True, source='custom_urls', read_only=True)
+    class Meta:
+        model = EmergencyAddress
+        fields = ('id', 'descriptor', 'street', 'city', 'state', 'zip_code', 'url', 'urls_detail')
