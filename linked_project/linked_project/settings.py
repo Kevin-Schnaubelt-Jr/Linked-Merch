@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'custom_urls.apps.CustomUrlsConfig',
     'api.apps.ApiConfig',
+    'phonenumber_field',
 
 ]
 
