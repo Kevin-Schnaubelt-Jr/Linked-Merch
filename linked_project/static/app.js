@@ -1,3 +1,4 @@
+
 const app = Vue.createApp({
     delimiters: ['[[', ']]'],
     data(){
@@ -26,7 +27,9 @@ const app = Vue.createApp({
             emergencyAddressStreetField: '',
             emergencyAddressCityField: '',
             emergencyAddressStateField: '',
-            emergencyAddressZipCodeField: ''
+            emergencyAddressZipCodeField: '',
+
+            testQRcode: '',
         }
     },
     methods: {
@@ -161,6 +164,42 @@ const app = Vue.createApp({
             }
             console.log('emergency phone format', this.emergencyPhonesFormat)
             
+        },
+        test(){
+            console.log('test')
+            // const axios = require("axios");
+
+            const options = {
+              method: 'GET',
+              url: 'https://qrcode-monkey.p.rapidapi.com/qr/custom',
+              responseType: 'blob',
+              params: {
+                data: 'https://www.qrcode-monkey.com',
+                config: '{"bodyColor": "#0277BD", "body":"mosaic"}',
+                download: 'true',
+                file: 'png',
+                size: '600'
+              },
+              headers: {
+                'X-RapidAPI-Key': '5559576162mshf44aea9d971363dp160f38jsn0f074a06d8d0',
+                'X-RapidAPI-Host': 'qrcode-monkey.p.rapidapi.com'
+              }
+            };
+            
+            axios.request(options).then(function (response) {
+                console.log(response.data)
+                let dd = URL.createObjectURL(response.data)
+                document.querySelector('#qr-place').src = dd
+            }).catch(function (error) {
+                console.error(error)
+            })
+            
+
+         
+        },
+        qrConvertTest(){
+            console.log('here')
+            // document.querySelector('#qr-place').src = "data:image/png;base64," + this.testQRcode
         },
         
         // EMERGENCY NAME CRUDS
