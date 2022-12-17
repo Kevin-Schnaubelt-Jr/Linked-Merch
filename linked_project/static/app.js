@@ -34,7 +34,20 @@ const app = Vue.createApp({
 
             message: 'Hello',
             srcVariable: '',
-            qrBodyStyle: "mosaic"
+            // QR api call variables
+            qrBodyStyle: "mosaic",
+            qrEyeStyle: 'frame6',
+            qrEyeBallStyle: 'ball6',
+            qrbodyColor: '#0F52BA',
+            qrbgColor: '#c5e6fc',
+            qreye1Color: '#2B3784',
+            qreye2Color: '',
+            qreye3Color: '',
+            qreyeBall1Color: '',
+            qreyeBall2Color: '',
+            qreyeBall3Color: ''
+            
+
         }
     },
     computed: {
@@ -199,7 +212,9 @@ const app = Vue.createApp({
                 responseType: 'blob',
                 params: {
                     data: 'http://127.0.0.1:8000/template/0/0kzjyprPzJotBXNx9aBt',
-                    config: `{"bodyColor": "", "body":"${this.qrBodyStyle}"}`,
+                    config: `{"bodyColor": "", "body":"${this.qrBodyStyle}", "eye":"${this.qrEyeStyle}", 
+                    "eyeBall":"${this.qrEyeBallStyle}", "bodyColor":"${this.qrbodyColor}", "bgColor": "${this.qrbgColor}",
+                    "eye1Color": "${this.qreye1Color}", "eye2Color": "${this.qreye1Color}", "eye3Color": "${this.qreye1Color}", "eyeBall1Color": "${this.qreyeBall1Color}", "eyeBall2Color":"${this.qreyeBall1Color}", "eyeBall3Color":"${this.qreyeBall1Color}"}`,
                     download: 'false',
                     file: 'png',
                     size: '200'

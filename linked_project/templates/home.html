@@ -15,16 +15,15 @@
             </div>
             <!-- <button v-if="qrCount < 5" @click="createUrl">create code</button> -->
         </div>
-        <div id="qr-code-create-div" class="border">
+        <div id="qr-code-create-div" class="border flex justify-center">
             <transition name="fade" mode="out-in" @leave="" @enter="" v-bind:style="">
                 <div v-if="transitionInt === 0">
                     
                     <button @click="test">Lets make a QR code!</button>
                 </div>
-                <div v-else-if="transitionBool === true">
-                    <p>here</p>
+                <div v-else-if="transitionBool === true" >
                     <p>[[getQRcode()]]</p>
-                    <img id="qr-builder-img" src="" alt="">
+                    <img id="qr-builder-img" src="" alt="" class="border-2 border-[black]">
                 </div>
             </transition>
 
