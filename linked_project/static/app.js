@@ -29,8 +29,19 @@ const app = Vue.createApp({
             emergencyAddressStateField: '',
             emergencyAddressZipCodeField: '',
 
-            testQRcode: '',
+            transitionInt: 0,
+            transitionBool: false,
+
+            message: 'Hello',
+            srcVariable: '',
+            qrBodyStyle: "mosaic"
         }
+    },
+    computed: {
+        reversedMessage: function () {
+            // `this` points to the vm instance
+            return this.message.split('').reverse().join('')
+          }
     },
     methods: {
         loadUrls(){
@@ -69,6 +80,21 @@ const app = Vue.createApp({
              
             })
 
+        },
+        deleteUrl(id){
+            if (id > 3){
+                axios({
+                    method: 'delete',
+                    url: '/api/v1/custom_urls/' + id,
+                    headers: {
+                        'X-CSRFToken': this.csrfToken
+                    }
+                }).then(response => {
+                    console.log('url deleted')
+                    this.loadUrls()
+                })
+
+            }
         },
         loadCurrentUser(){
             axios({
@@ -165,41 +191,38 @@ const app = Vue.createApp({
             console.log('emergency phone format', this.emergencyPhonesFormat)
             
         },
-        test(){
-            console.log('test')
-            // const axios = require("axios");
-
-            const options = {
-              method: 'GET',
-              url: 'https://qrcode-monkey.p.rapidapi.com/qr/custom',
-              responseType: 'blob',
-              params: {
-                data: 'https://www.qrcode-monkey.com',
-                config: '{"bodyColor": "#0277BD", "body":"mosaic"}',
-                download: 'true',
-                file: 'png',
-                size: '600'
-              },
-              headers: {
-                'X-RapidAPI-Key': '5559576162mshf44aea9d971363dp160f38jsn0f074a06d8d0',
-                'X-RapidAPI-Host': 'qrcode-monkey.p.rapidapi.com'
-              }
-            };
+        getQRcode(){
             
-            axios.request(options).then(function (response) {
-                console.log(response.data)
-                let dd = URL.createObjectURL(response.data)
-                document.querySelector('#qr-place').src = dd
-            }).catch(function (error) {
-                console.error(error)
+            axios({
+                method: 'get',
+                url: 'https://qrcode-monkey.p.rapidapi.com/qr/custom',
+                responseType: 'blob',
+                params: {
+                    data: 'http://127.0.0.1:8000/template/0/0kzjyprPzJotBXNx9aBt',
+                    config: `{"bodyColor": "", "body":"${this.qrBodyStyle}"}`,
+                    download: 'false',
+                    file: 'png',
+                    size: '200'
+                },
+                headers: {
+                    'X-RapidAPI-Key': '5559576162mshf44aea9d971363dp160f38jsn0f074a06d8d0',
+                    'X-RapidAPI-Host': 'qrcode-monkey.p.rapidapi.com'
+                    },
+            }).then(response => {
+                console.log('QR api data',response.data)
+                let magicUrl = URL.createObjectURL(response.data)
+                document.querySelector('#qr-builder-img').src = magicUrl
             })
-            
-
-         
+        
         },
-        qrConvertTest(){
-            console.log('here')
-            // document.querySelector('#qr-place').src = "data:image/png;base64," + this.testQRcode
+        test(){
+            this.transitionInt += 1
+            this.transitionBool = !this.transitionBool
+            
+        },
+        test2(index){
+            console.log('here', index)
+            // return 'https://i.imgur.com/TvmAlr9.jpeg'
         },
         
         // EMERGENCY NAME CRUDS
@@ -336,8 +359,9 @@ const app = Vue.createApp({
 
     mounted(){
         this.csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value
-
         console.log('MOUNTED')
+        
+        
        
     }
 })

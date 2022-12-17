@@ -3,16 +3,38 @@
 {% block content %}
 
         <div class="mt-[1rem] h-[10rem] border flex items-center flex-wrap">
-            <div v-for="item in currentUser.urls_detail">
+            <div v-for="(item, index) in currentUser.urls_detail">
                 <a :href="'template/0/' + item.unique_key">
 
                     [[item.id]]
                 </a>
+                <img :id="'qr-img' + index" :src="test2(item.unique_key)" alt="">
+                <p>[[index]]</p>
+                
+                <button v-if="item.author == currentUser.id" @click="deleteUrl(item.id)" class="fa-regular fa-circle-xmark" ></button>
             </div>
-            <button v-if="qrCount < 5" @click="createUrl">create code</button>
+            <!-- <button v-if="qrCount < 5" @click="createUrl">create code</button> -->
         </div>
-        <button @click="test">THE BUTTON</button>
+        <div id="qr-code-create-div" class="border">
+            <transition name="fade" mode="out-in" @leave="" @enter="" v-bind:style="">
+                <div v-if="transitionInt === 0">
+                    
+                    <button @click="test">Lets make a QR code!</button>
+                </div>
+                <div v-else-if="transitionBool === true">
+                    <p>here</p>
+                    <p>[[getQRcode()]]</p>
+                    <img id="qr-builder-img" src="" alt="">
+                </div>
+            </transition>
+
+        </div>
+        <button @click="getQRcode">THE BUTTON</button>
         <img id="qr-place"  alt="">
+        <div id="example">
+            <p>Original message: "[[ message ]]"</p>
+            <p>Computed reversed message: "[[ reversedMessage ]]"</p>
+        </div>
         
 
 
