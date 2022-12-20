@@ -32,20 +32,47 @@ const app = Vue.createApp({
             transitionInt: 0,
             transitionBool: false,
 
+            qrGetBugCounterFix: false,
+
             message: 'Hello',
             srcVariable: '',
             // QR api call variables
-            qrBodyStyle: "mosaic",
+            qrBodyStyle: "circle",
             qrEyeStyle: 'frame6',
             qrEyeBallStyle: 'ball6',
-            qrbodyColor: '#0F52BA',
-            qrbgColor: '#c5e6fc',
-            qreye1Color: '#2B3784',
+            qrbodyColor: '',
+            qrbgColor: '',
+            qreye1Color: '',
             qreye2Color: '',
             qreye3Color: '',
             qreyeBall1Color: '',
             qreyeBall2Color: '',
-            qreyeBall3Color: ''
+            qreyeBall3Color: '',
+            // array of colors
+            bgColorsCounter: 0,
+            bgColors: [
+                '#E6B0AA','#D2B4DE','#AED6F1', '#A9DFBF', '#F9E79F', '#EDBB99',
+                '#FFFFFF',
+            ],
+            bodyColorsCounter: 0,
+            frameColorsCounter: 0,
+            ballColorsCounter: 0,
+            bodyColors: [
+                '#641E16', '#4A235A', '#1B4F72', '#145A32', '#7D6608', '#6E2C00',
+
+
+                // black
+                '#000000'
+            ],
+            qrBodyStylesListCounter: 2,
+            qrBodyStylesList: [
+                'square', 'circle', 'circular', 'japnese', 'pointed-edge-cut', 'pointed-smooth',
+                'rounded-in-smooth', 'diamond', 'mosaic', 'circle-zebra', 'edge-cut', 'leaf',
+                'pointed-in', 'round', 'rounded-pointed', 'dot', 'circle-zebra-vertical', 
+                'edge-cut-smooth', 'pointed', 'pointed-in-smooth', 'rounded-in', 'star'
+            ],
+            qrFrameCounter: 7,
+            qrBallCounter: 7,
             
 
         }
@@ -205,6 +232,9 @@ const app = Vue.createApp({
             
         },
         getQRcode(){
+            if (this.qrGetBugCounterFix === true){
+                return
+            }
             
             axios({
                 method: 'get',
@@ -227,12 +257,86 @@ const app = Vue.createApp({
                 console.log('QR api data',response.data)
                 let magicUrl = URL.createObjectURL(response.data)
                 document.querySelector('#qr-builder-img').src = magicUrl
+                document.querySelectorAll('.edit-qr-buttons').forEach(element => {
+                    element.disabled = false
+                })
+                
             })
         
         },
-        test(){
+        editQRcode(id){
+            // enable the getQRcode function
+            this.qrGetBugCounterFix = false
+            console.log(document.querySelector("#qr-init-p").innerHTML)
+            document.querySelectorAll('.edit-qr-buttons').forEach(element => {
+                element.disabled = true
+            })
+            console.log('editQRcode', typeof id, id)
+            // if button 1 is pressed, change background
+            if(id === 1){
+                this.qrbgColor = this.bgColors[this.bgColorsCounter]
+                this.bgColorsCounter++
+                if(this.bgColorsCounter === this.bgColors.length){
+                    this.bgColorsCounter = 0
+                }
+            }
+            // body color changer
+            if(id === 2){
+                this.qrbodyColor = this.bodyColors[this.bodyColorsCounter]
+                this.bodyColorsCounter++
+                if(this.bodyColorsCounter === this.bodyColors.length){
+                    this.bodyColorsCounter = 0
+                }
+            }
+            // frame changer
+            if(id === 3){
+                this.qrEyeStyle = 'frame' + this.qrFrameCounter
+                this.qrFrameCounter++
+                if(this.qrFrameCounter == 17){
+                    this.qrFrameCounter = 0
+                }
+            }
+            // body style changes
+            if(id === 4){
+                this.qrBodyStyle = this.qrBodyStylesList[this.qrBodyStylesListCounter]
+                this.qrBodyStylesListCounter++
+                if (this.qrBodyStylesListCounter === (this.qrBodyStylesList.length)){
+                    this.qrBodyStylesListCounter = 0
+                }
+            }
+            // inner ball changer
+            if(id === 5){
+                this.qrEyeBallStyle = 'ball' + this.qrBallCounter
+                this.qrBallCounter++
+                if(this.qrBallCounter == 20){
+                    this.qrFrameCounter = 0
+                }
+            }
+            if(id === 6){
+                this.qreye1Color = this.bodyColors[this.frameColorsCounter]
+                this.frameColorsCounter++
+                if(this.frameColorsCounter === this.bodyColors.length){
+                    this.frameColorsCounter = 0
+                }
+
+            }
+            if(id === 7 ){
+                this.qreyeBall1Color = this.bodyColors[this.ballColorsCounter]
+                this.ballColorsCounter++
+                if(this.ballColorsCounter === this.bodyColors.length){
+                    this.ballColorsCounter = 0
+                }
+            }
+            console.log(this.qrEyeBallStyle)
+            this.getQRcode()
+            // disabled the getQRcode function (function calls twice otherwise)
+            this.qrGetBugCounterFix = true
+            
+        },
+        transition1(){
             this.transitionInt += 1
             this.transitionBool = !this.transitionBool
+            
             
         },
         test2(index){

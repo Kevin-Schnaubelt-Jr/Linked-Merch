@@ -19,20 +19,28 @@
             <transition name="fade" mode="out-in" @leave="" @enter="" v-bind:style="">
                 <div v-if="transitionInt === 0">
                     
-                    <button @click="test">Lets make a QR code!</button>
+                    <button @click="transition1">Lets make a QR code!</button>
                 </div>
-                <div v-else-if="transitionBool === true" >
-                    <p>[[getQRcode()]]</p>
+                <div v-else-if="transitionBool === true" class="flex justify-evenly w-screen">
+
+                    <p id="qr-init-p" >[[getQRcode()]]</p>
+                    <div class="flex flex-col justify-evenly">
+                        <button @click="editQRcode(2)" class="edit-qr-buttons" >BODY COLOR</button>
+                        <button @click="editQRcode(1)" class="edit-qr-buttons" >BACKGROUND COLOR</button>
+                        <button @click="editQRcode(6)" class="edit-qr-buttons" >FRAME COLOR</button>
+                        <button @click="editQRcode(7)" class="edit-qr-buttons" >EYE COLOR</button>
+                        
+
+                    </div>
                     <img id="qr-builder-img" src="" alt="" class="border-2 border-[black]">
+                    <div class="flex flex-col justify-evenly">
+                        <button @click="editQRcode(4)" class="edit-qr-buttons" >CHANGE THE BODY!</button>
+                        <button @click="editQRcode(3)" class="edit-qr-buttons" >CHANGE THE FRAME!</button>
+                        <button @click="editQRcode(5)" class="edit-qr-buttons" >CHANGE THE EYE!</button>
+                    </div>
                 </div>
             </transition>
 
-        </div>
-        <button @click="getQRcode">THE BUTTON</button>
-        <img id="qr-place"  alt="">
-        <div id="example">
-            <p>Original message: "[[ message ]]"</p>
-            <p>Computed reversed message: "[[ reversedMessage ]]"</p>
         </div>
         
 
