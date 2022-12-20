@@ -32,11 +32,10 @@ const app = Vue.createApp({
             transitionInt: 0,
             transitionBool: false,
 
-            qrGetBugCounterFix: false,
+            
 
-            message: 'Hello',
-            srcVariable: '',
             // QR api call variables
+            uniqueKeyHold: '',
             qrBodyStyle: "circle",
             qrEyeStyle: 'frame6',
             qrEyeBallStyle: 'ball6',
@@ -231,9 +230,49 @@ const app = Vue.createApp({
             console.log('emergency phone format', this.emergencyPhonesFormat)
             
         },
-        getQRcode(){
-            if (this.qrGetBugCounterFix === true){
-                return
+        getQRcode(type, index, key, editId, styling){
+            console.log('index', typeof index, index)
+            console.log('type', typeof type, type)
+            let bodyStyle = 'circle'
+            let eyeStyle = 'frame6'
+            let eyeBallStyle = 'ball6'
+            let bodyColor = ''
+            let bgColor = ''
+            let eye1Color = ''
+            let eyeBall1Color = ''
+
+            
+        
+            
+            //type zero comes from initial page print
+            if (type === 0){
+                sizeParam = '100'
+                uniqueKey = key
+                console.log('syyling', styling.username)
+            }
+            //type 1 is create a qr code
+            if(type === 1){
+                sizeParam = '200'
+                this.uniqueKeyHold = this.randomKeyGenerator()
+                uniqueKey = this.uniqueKeyHold
+                console.log('new key', typeof uniqueKey, uniqueKey)
+            }
+            // type 2 editing the QR code style
+            if (type === 2){
+                uniqueKey = this.uniqueKeyHold
+                // bodyStyle = this.qrBodyStylesList[this.qrBodyStylesListCounter]
+                // this.qrBodyStyle = bodyStyle
+                // this.qrBodyStylesListCounter++
+                // console.log('body style', this.qrBodyStyle)
+                editArray = this.editQRcode(editId)
+                console.log(editArray)
+                bodyStyle = editArray[0]
+                eyeStyle = editArray[1]
+                eyeBallStyle = editArray[2]
+                bodyColor = editArray[3]
+                bgColor = editArray[4]
+                eye1Color = editArray[5]
+                eyeBall1Color = editArray[6]
             }
             
             axios({
@@ -241,13 +280,13 @@ const app = Vue.createApp({
                 url: 'https://qrcode-monkey.p.rapidapi.com/qr/custom',
                 responseType: 'blob',
                 params: {
-                    data: 'http://127.0.0.1:8000/template/0/0kzjyprPzJotBXNx9aBt',
-                    config: `{"bodyColor": "", "body":"${this.qrBodyStyle}", "eye":"${this.qrEyeStyle}", 
-                    "eyeBall":"${this.qrEyeBallStyle}", "bodyColor":"${this.qrbodyColor}", "bgColor": "${this.qrbgColor}",
-                    "eye1Color": "${this.qreye1Color}", "eye2Color": "${this.qreye1Color}", "eye3Color": "${this.qreye1Color}", "eyeBall1Color": "${this.qreyeBall1Color}", "eyeBall2Color":"${this.qreyeBall1Color}", "eyeBall3Color":"${this.qreyeBall1Color}"}`,
+                    data: 'http://127.0.0.1:8000/template/0/' + uniqueKey,
+                    config: `{"bodyColor": "", "body":"${bodyStyle}", "eye":"${eyeStyle}", 
+                    "eyeBall":"${eyeBallStyle}", "bodyColor":"${bodyColor}", "bgColor": "${bgColor}",
+                    "eye1Color": "${eye1Color}", "eye2Color": "${eye1Color}", "eye3Color": "${eye1Color}", "eyeBall1Color": "${eyeBall1Color}", "eyeBall2Color":"${eyeBall1Color}", "eyeBall3Color":"${eyeBall1Color}"}`,
                     download: 'false',
                     file: 'png',
-                    size: '200'
+                    size: sizeParam
                 },
                 headers: {
                     'X-RapidAPI-Key': '5559576162mshf44aea9d971363dp160f38jsn0f074a06d8d0',
@@ -256,6 +295,9 @@ const app = Vue.createApp({
             }).then(response => {
                 console.log('QR api data',response.data)
                 let magicUrl = URL.createObjectURL(response.data)
+                if (type === 0){
+                    document.querySelector('#qr-img'+ index).src = magicUrl
+                }
                 document.querySelector('#qr-builder-img').src = magicUrl
                 document.querySelectorAll('.edit-qr-buttons').forEach(element => {
                     element.disabled = false
@@ -266,52 +308,51 @@ const app = Vue.createApp({
         },
         editQRcode(id){
             // enable the getQRcode function
-            this.qrGetBugCounterFix = false
-            console.log(document.querySelector("#qr-init-p").innerHTML)
             document.querySelectorAll('.edit-qr-buttons').forEach(element => {
                 element.disabled = true
             })
             console.log('editQRcode', typeof id, id)
-            // if button 1 is pressed, change background
-            if(id === 1){
-                this.qrbgColor = this.bgColors[this.bgColorsCounter]
-                this.bgColorsCounter++
-                if(this.bgColorsCounter === this.bgColors.length){
-                    this.bgColorsCounter = 0
-                }
-            }
-            // body color changer
-            if(id === 2){
-                this.qrbodyColor = this.bodyColors[this.bodyColorsCounter]
-                this.bodyColorsCounter++
-                if(this.bodyColorsCounter === this.bodyColors.length){
-                    this.bodyColorsCounter = 0
-                }
-            }
-            // frame changer
-            if(id === 3){
-                this.qrEyeStyle = 'frame' + this.qrFrameCounter
-                this.qrFrameCounter++
-                if(this.qrFrameCounter == 17){
-                    this.qrFrameCounter = 0
-                }
-            }
             // body style changes
-            if(id === 4){
+            if(id === 1){
                 this.qrBodyStyle = this.qrBodyStylesList[this.qrBodyStylesListCounter]
                 this.qrBodyStylesListCounter++
                 if (this.qrBodyStylesListCounter === (this.qrBodyStylesList.length)){
                     this.qrBodyStylesListCounter = 0
                 }
             }
+            // frame changer
+            if(id === 2){
+                this.qrEyeStyle = 'frame' + this.qrFrameCounter
+                this.qrFrameCounter++
+                if(this.qrFrameCounter == 17){
+                    this.qrFrameCounter = 0
+                }
+            }
             // inner ball changer
-            if(id === 5){
+            if(id === 3){
                 this.qrEyeBallStyle = 'ball' + this.qrBallCounter
                 this.qrBallCounter++
                 if(this.qrBallCounter == 20){
                     this.qrFrameCounter = 0
                 }
             }
+            // body color changer
+            if(id === 4){
+                this.qrbodyColor = this.bodyColors[this.bodyColorsCounter]
+                this.bodyColorsCounter++
+                if(this.bodyColorsCounter === this.bodyColors.length){
+                    this.bodyColorsCounter = 0
+                }
+            }
+            // change background
+            if(id === 5){
+                this.qrbgColor = this.bgColors[this.bgColorsCounter]
+                this.bgColorsCounter++
+                if(this.bgColorsCounter === this.bgColors.length){
+                    this.bgColorsCounter = 0
+                }
+            }
+            // change frame color
             if(id === 6){
                 this.qreye1Color = this.bodyColors[this.frameColorsCounter]
                 this.frameColorsCounter++
@@ -320,6 +361,7 @@ const app = Vue.createApp({
                 }
 
             }
+            // change eye color
             if(id === 7 ){
                 this.qreyeBall1Color = this.bodyColors[this.ballColorsCounter]
                 this.ballColorsCounter++
@@ -327,17 +369,17 @@ const app = Vue.createApp({
                     this.ballColorsCounter = 0
                 }
             }
-            console.log(this.qrEyeBallStyle)
-            this.getQRcode()
-            // disabled the getQRcode function (function calls twice otherwise)
-            this.qrGetBugCounterFix = true
-            
+            qrArray = [this.qrBodyStyle, this.qrEyeStyle, this.qrEyeBallStyle, this.qrbodyColor, this.qrbgColor, this.qreye1Color, this.qreyeBall1Color]
+            return qrArray
         },
         transition1(){
             this.transitionInt += 1
             this.transitionBool = !this.transitionBool
             
             
+        },
+        test(thing){
+            console.log('we in test', typeof thing, thing.username)
         },
         test2(index){
             console.log('here', index)

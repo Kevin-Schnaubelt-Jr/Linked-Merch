@@ -2,28 +2,30 @@
 
 {% block content %}
 
-        <div class="mt-[1rem] h-[10rem] border flex items-center flex-wrap">
-            <div v-for="(item, index) in currentUser.urls_detail">
-                <a :href="'template/0/' + item.unique_key">
-
-                    [[item.id]]
-                </a>
-                <img :id="'qr-img' + index" :src="test2(item.unique_key)" alt="">
-                <p>[[index]]</p>
-                
-                <button v-if="item.author == currentUser.id" @click="deleteUrl(item.id)" class="fa-regular fa-circle-xmark" ></button>
+        <div class="mt-[1rem] h-[20rem] border flex justify-evenly items-center flex-wrap">
+            <div v-for="(thing, index) in urls">
+                <div v-if="thing.author_detail.username === currentUser.username">
+                    <a :href="'template/0/' + thing.unique_key">
+    
+                        [[thing.id]]
+                    </a>
+                    <p>[[index]]</p>
+                    <img :id="'qr-img' + index" :src="getQRcode(0, index, thing.unique_key, 0, thing.author_detail)" alt="">
+                    
+                    <button v-if="thing.author_detail.username == currentUser.username" @click="deleteUrl(thing.id)" class="fa-regular fa-circle-xmark" ></button>
+                </div>
             </div>
             <!-- <button v-if="qrCount < 5" @click="createUrl">create code</button> -->
         </div>
         <div id="qr-code-create-div" class="border flex justify-center">
-            <transition name="fade" mode="out-in" @leave="" @enter="" v-bind:style="">
+            <transition name="fade" mode="out-in" @leave="" @enter="getQRcode(1)" v-bind:style="">
                 <div v-if="transitionInt === 0">
                     
                     <button @click="transition1">Lets make a QR code!</button>
                 </div>
                 <div v-else-if="transitionBool === true" class="flex justify-evenly w-screen">
 
-                    <p id="qr-init-p" >[[getQRcode()]]</p>
+                    <p id="qr-init-p" ></p>
                     <div class="flex flex-col justify-evenly">
                         <button @click="editQRcode(2)" class="edit-qr-buttons" >BODY COLOR</button>
                         <button @click="editQRcode(1)" class="edit-qr-buttons" >BACKGROUND COLOR</button>
@@ -34,13 +36,16 @@
                     </div>
                     <img id="qr-builder-img" src="" alt="" class="border-2 border-[black]">
                     <div class="flex flex-col justify-evenly">
-                        <button @click="editQRcode(4)" class="edit-qr-buttons" >CHANGE THE BODY!</button>
-                        <button @click="editQRcode(3)" class="edit-qr-buttons" >CHANGE THE FRAME!</button>
-                        <button @click="editQRcode(5)" class="edit-qr-buttons" >CHANGE THE EYE!</button>
+                        <button @click="getQRcode(2, 0, '', 1)" class="edit-qr-buttons" >CHANGE THE BODY!</button>
+                        <button @click="getQRcode(2, 0, '', 2)" class="edit-qr-buttons" >CHANGE THE FRAME!</button>
+                        <button @click="getQRcode(2, 0, '', 3)" class="edit-qr-buttons" >CHANGE THE EYE!</button>
                     </div>
                 </div>
             </transition>
 
+        </div>
+        <div v-for="thing in urls">
+            <button v-if="thing.author_detail.username === currentUser.username" @click="test(thing.author_detail)">hi!</button>
         </div>
         
 
