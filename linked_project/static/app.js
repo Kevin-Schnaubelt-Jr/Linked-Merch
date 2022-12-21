@@ -303,13 +303,14 @@ const app = Vue.createApp({
                 eye1Color = editArray[5]
                 eyeBall1Color = editArray[6]
             }
-            
+            // 'http://127.0.0.1:8000/template/0/' development url
+            // 'https://linked-shirts.herokuapp.com/template/0/'
             axios({
                 method: 'get',
                 url: 'https://qrcode-monkey.p.rapidapi.com/qr/custom',
                 responseType: 'blob',
                 params: {
-                    data: 'http://127.0.0.1:8000/template/0/' + uniqueKey,
+                    data: 'https://linked-shirts.herokuapp.com/template/0/' + uniqueKey,
                     config: `{"bodyColor": "", "body":"${bodyStyle}", "eye":"${eyeStyle}", 
                     "eyeBall":"${eyeBallStyle}", "bodyColor":"${bodyColor}", "bgColor": "${bgColor}",
                     "eye1Color": "${eye1Color}", "eye2Color": "${eye1Color}", "eye3Color": "${eye1Color}", "eyeBall1Color": "${eyeBall1Color}", "eyeBall2Color":"${eyeBall1Color}", "eyeBall3Color":"${eyeBall1Color}"}`,
