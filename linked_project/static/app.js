@@ -31,6 +31,8 @@ const app = Vue.createApp({
 
             transitionInt: 0,
             transitionBool: false,
+            transitionEnter: true,
+            getQRdisabler: false,
 
             
 
@@ -39,12 +41,12 @@ const app = Vue.createApp({
             qrBodyStyle: "circle",
             qrEyeStyle: 'frame6',
             qrEyeBallStyle: 'ball6',
-            qrbodyColor: '',
-            qrbgColor: '',
-            qreye1Color: '',
+            qrbodyColor: '#000000',
+            qrbgColor: '#FFFFFF',
+            qreye1Color: '#000000',
             qreye2Color: '',
             qreye3Color: '',
-            qreyeBall1Color: '',
+            qreyeBall1Color: '#000000',
             qreyeBall2Color: '',
             qreyeBall3Color: '',
             // array of colors
@@ -90,7 +92,7 @@ const app = Vue.createApp({
             }).then(response => {
                 this.urls = response.data
                 console.log('get urls', response.data)
-                this.loadCurrentUser()
+                
                 }
             ).catch(error => {
     
@@ -99,7 +101,6 @@ const app = Vue.createApp({
             })
         },
         createUrl() {
-            
             axios({
                 method: 'post',
                 url: '/api/v1/custom_urls/',
@@ -107,13 +108,22 @@ const app = Vue.createApp({
                     'X-CSRFToken': this.csrfToken
                 },
                 data: {
-                    "unique_key" : this.randomKeyGenerator(),
-                    "template_key": this.newUrl.template_key,
+                    "unique_key" : this.uniqueKeyHold,
+                    "template_key": 0,
+                    "body_style": this.qrBodyStyle,
+                    "eye_style": this.qrEyeStyle,
+                    "eye_ball_style": this.qrEyeBallStyle,
+                    "body_color": this.qrbodyColor,
+                    "bg_color": this.qrbgColor,
+                    "eye_1_color": this.qreye1Color,
+                    "eye_ball_1_color": this.qreyeBall1Color,
                     "author": this.currentUser.id,
                 }
             }).then( response => {
-                this.loadUrls()
+                this.loadCurrentUser()
                 console.log(response.data)
+                this.transitionInt = 0
+                this.transitionBool = false
             }).catch(error => {
                 console.log(error.response)
              
@@ -121,7 +131,7 @@ const app = Vue.createApp({
 
         },
         deleteUrl(id){
-            if (id > 3){
+            if (true){
                 axios({
                     method: 'delete',
                     url: '/api/v1/custom_urls/' + id,
@@ -130,7 +140,7 @@ const app = Vue.createApp({
                     }
                 }).then(response => {
                     console.log('url deleted')
-                    this.loadUrls()
+                    this.loadCurrentUser()
                 })
 
             }
@@ -230,9 +240,13 @@ const app = Vue.createApp({
             console.log('emergency phone format', this.emergencyPhonesFormat)
             
         },
-        getQRcode(type, index, key, editId, styling){
-            console.log('index', typeof index, index)
+        getQRcode(type, index, url, editId){
+            if (this.getQRdisabler){
+                return
+            }
+            console.log('url', typeof url, url)
             console.log('type', typeof type, type)
+            
             let bodyStyle = 'circle'
             let eyeStyle = 'frame6'
             let eyeBallStyle = 'ball6'
@@ -244,18 +258,33 @@ const app = Vue.createApp({
             
         
             
-            //type zero comes from initial page print
-            if (type === 0){
+            // type zero comes from initial page print, and type 3 is from emergency
+            if (type === 0 || type === 3){
                 sizeParam = '100'
-                uniqueKey = key
-                console.log('syyling', styling.username)
+                uniqueKey = url.unique_key
+                bodyStyle = url.body_style
+                eyeStyle = url.eye_style
+                bodyColor = url.body_color
+                bgColor = url.bg_color
+                eye1Color = url.eye_1_color
+                eyeBall1Color = url.eye_ball_1_color
+                if (type === 3){
+                    sizeParam = '200'
+                }
             }
             //type 1 is create a qr code
             if(type === 1){
-                sizeParam = '200'
-                this.uniqueKeyHold = this.randomKeyGenerator()
-                uniqueKey = this.uniqueKeyHold
-                console.log('new key', typeof uniqueKey, uniqueKey)
+                if (this.transitionEnter){
+                    sizeParam = '200'
+                    this.uniqueKeyHold = this.randomKeyGenerator()
+                    uniqueKey = this.uniqueKeyHold
+                    console.log('new key', typeof uniqueKey, uniqueKey)
+                    this.transitionEnter = !this.transitionEnter
+                }
+                else {
+                    this.transitionEnter = !this.transitionEnter
+                    // return
+                }
             }
             // type 2 editing the QR code style
             if (type === 2){
@@ -297,6 +326,11 @@ const app = Vue.createApp({
                 let magicUrl = URL.createObjectURL(response.data)
                 if (type === 0){
                     document.querySelector('#qr-img'+ index).src = magicUrl
+                    console.log('tried to print qr codes in home')
+                }
+                if (type === 3){
+                    document.querySelector('#emergency-qr-img').src = magicUrl
+                    this.getQRdisabler = true
                 }
                 document.querySelector('#qr-builder-img').src = magicUrl
                 document.querySelectorAll('.edit-qr-buttons').forEach(element => {
@@ -377,9 +411,10 @@ const app = Vue.createApp({
             this.transitionBool = !this.transitionBool
             
             
+            
         },
-        test(thing){
-            console.log('we in test', typeof thing, thing.username)
+        test(){
+            console.log(this.uniqueKeyHold ,this.qrBodyStyle, this.qrEyeStyle, this.qrEyeBallStyle, this.qrbodyColor, this.qrbgColor, this.qreye1Color, this.qreyeBall1Color)
         },
         test2(index){
             console.log('here', index)
@@ -410,6 +445,8 @@ const app = Vue.createApp({
                 console.log('posted', response.data)
                 document.querySelector('#new-emergency-name-button').style.display = "block"
                 document.querySelector('#make-new-emergency-name-div').style.display = 'none'
+                this.emergencyNameDescriptorInputField = ''
+                this.emergencyNameInputField = ''
     
             })
         },
@@ -508,6 +545,7 @@ const app = Vue.createApp({
         }
     },
     created: function() {
+        this.loadCurrentUser()
         this.loadUrls()
         this.loadNames()
         this.loadPhones()
