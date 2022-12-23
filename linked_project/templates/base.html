@@ -11,13 +11,19 @@
     <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/ballpoint-pen" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/dd6b6dce0f.js" crossorigin="anonymous"></script>
-    <title>Home</title>
+    <title>Linked Shirts</title>
 </head>
 <body>
     {% csrf_token %}
     <div id="app" class="bg-[#28282B] min-h-screen text-[white] text-2xl">
         <div class="flex flex-col items-center justify-center relative h-[7rem] bg-[#57b7de] border-2">
-            <h1>Hello [[currentUser.username]].</h1>
+            {% if user.is_authenticated %}
+                <h1 class="md:text-4xl">Hello [[currentUser.username]]!</h1>
+            {% endif %}
+            {% if user.is_authenticated == False %}
+                <p class="text-lg md:text-3xl">Welcome to</p>
+                <h1 class="text-2xl md:text-4xl">Link Shirts!</h1>
+            {% endif %}
             
     
             <div class="absolute bottom-0 right-0 flex flex-col">

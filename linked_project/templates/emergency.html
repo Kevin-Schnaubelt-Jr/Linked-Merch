@@ -7,7 +7,7 @@
 </div> -->
 <!-- <p class="text-center text-[red]">[[currentUser.username]]</p> -->
 {% comment %} "major-print-div" and "nested-major-print-div" are what finds the reveleant information for the current page {% endcomment %}
-<div id="major-print-div" v-for="url in urls" > {% comment %} "this loop trys to find which url's unique key matches the '{{key}}', which is the webpage you are currently on {% endcomment %}
+<div id="major-print-div" v-for="url in urls" class="md:flex md:justify-center md:text-3xl"> {% comment %} "this loop trys to find which url's unique key matches the '{{key}}', which is the webpage you are currently on {% endcomment %}
     <div id="nested-major-print-div" v-if="url.unique_key === '{{key}}'" class=" p-[1rem]">
         <p id="page-key"  class="hidden">[[url.id]]</p> {% comment %} VERY IMPORTANT. "page-key" div is what allows us to refernce the url.id in javascript for making api calls currectly. {% endcomment %}
         <div id="print-name-div" v-for="person in url.name_detail">
@@ -74,7 +74,7 @@
 <div id="emergency-qr-display" v-for="uhg in urls">
     <div v-if="uhg.unique_key === '{{key}}'">
         <div class=" flex justify-center">
-            <img id="emergency-qr-img" :src="getQRcode(3, 0, uhg, 0)" alt="">
+            <img id="emergency-qr-img" :src="getQRcode(3, 0, uhg, 0)" alt="" class="mb-4">
            
     
         </div>

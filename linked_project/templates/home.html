@@ -3,9 +3,9 @@
 {% block content %}
 
     {% if user.is_authenticated %}
-        <div id="display-qr-codes" class="mt-[1rem] h-[20rem] flex justify-evenly items-center flex-wrap">
+        <div id="display-qr-codes" class="mt-[1rem] h-[15rem] flex justify-evenly items-center flex-wrap md:text-3xl">
             <div  v-for="(thing, index) in currentUser.urls_detail">
-                <div>
+                <div class=" flex flex-col items-center">
                     <p>Click to enter!</p>
                     <a :href="'template/0/' + thing.unique_key">
     
@@ -13,21 +13,21 @@
                         <img :id="'qr-img' + index" :src="getQRcode(0, index, thing, 0)" alt="" class="displayed-qr-codes">
                     </a>
                     
-                    <button v-if="thing.author == currentUser.id" @click="deleteUrl(thing.id)" class="fa-regular fa-circle-xmark" ></button>
+                    <button v-if="thing.author == currentUser.id" @click="deleteUrl(thing.id)" class="fa-regular fa-circle-xmark m-4" ></button>
                 </div>
             </div>
             <!-- <button v-if="qrCount < 5" @click="createUrl">create code</button> -->
         </div>
-        <div id="qr-code-create-div" class=" flex justify-center">
+        <div id="qr-code-create-div" class=" flex justify-center md:text-4xl">
             <transition v-if="qrCount < 3" name="fade" mode="out-in" @leave="" @enter="getQRcode(1)" v-bind:style="">
                 <div v-if="transitionInt === 0">
                     
                     <button @click="transition1">Let's make a QR code!</button>
                 </div>
-                <div id="create-qr-div" v-else-if="transitionBool === true" class="flex flex-col items-center" >
+                <div id="create-qr-div" v-else-if="transitionBool === true" class=" flex flex-col text-lg " >
 
-                    <div class="flex justify-evenly w-screen">
-                        <div class="flex flex-col justify-evenly">
+                    <div class="flex justify-evenly w-screen items-center md:justify-center">
+                        <div class="flex flex-col justify-evenly h-full md:m-5">
                             <button @click="getQRcode(2, 0, '', 4)" class="edit-qr-buttons" >BODY COLOR</button>
                             <button @click="getQRcode(2, 0, '', 5)" class="edit-qr-buttons" >BACKGROUND COLOR</button>
                             <button @click="getQRcode(2, 0, '', 6)" class="edit-qr-buttons" >FRAME COLOR</button>
@@ -35,8 +35,8 @@
                             
     
                         </div>
-                        <img id="qr-builder-img" src="" alt="" class="border-2 border-[black]">
-                        <div class="flex flex-col justify-evenly">
+                        <img id="qr-builder-img" src="" alt="" class="border-2 border-[black] h-[9rem] w-[9rem] m-1 md:h-[15rem] md:w-[15rem]">
+                        <div class="flex flex-col justify-evenly h-full md:m-5">
                             <button @click="getQRcode(2, 0, '', 1)" class="edit-qr-buttons" >CHANGE THE BODY!</button>
                             <button @click="getQRcode(2, 0, '', 2)" class="edit-qr-buttons" >CHANGE THE FRAME!</button>
                             <button @click="getQRcode(2, 0, '', 3)" class="edit-qr-buttons" >CHANGE THE EYE!</button>
@@ -48,7 +48,14 @@
             </transition>
 
         </div>
-    {% endif %} 
 
+        {% endif %}
+
+        {% if user.is_authenticated == False%}
+        <div class="flex justify-center">
+            <h1 class="mt-10 md:text-4xl">Login to begin!</h1>
+        </div>
+        {% endif %}
+        
 
 {% endblock content %}
