@@ -9,13 +9,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Londrina+Shadow&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;1,100;1,200;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/ballpoint-pen" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/dd6b6dce0f.js" crossorigin="anonymous"></script>
     <title>Linked Shirts</title>
 </head>
 <body>
     {% csrf_token %}
-    <div id="app" class="bg-[#28282B] min-h-screen text-[white] text-2xl">
+    <div id="base" class="bg-[#28282B]  text-[white] text-2xl">
         <div class="flex flex-col items-center justify-center relative h-[7rem] bg-[#57b7de] border-2">
             {% if user.is_authenticated %}
                 <h1 class="md:text-4xl">Hello [[currentUser.username]]!</h1>
@@ -43,26 +45,24 @@
         </div>
 
 
+    </div>
+    
+
+
+  
     {% block content %}
     {% endblock content %}
 
 
-  
 
-
-    </div>
-
-    <!-- Import Ajax -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-    <!-- Import Vue.js -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
 
     <!-- Import file.js -->
-    <script src="{% static '/app.js' %}"></script> 
+    <script src="{% static '/base.js' %}"></script> 
 
     <!-- Mount App -->
-    <script> const mountApp = app.mount('#app') </script>
+    <script> const mountAppBase = base.mount('#base') </script>
+
 
 
 </body>
