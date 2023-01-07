@@ -4,6 +4,7 @@ const home = Vue.createApp({
         return{
             currentUser: {},
             csrfToken: '',
+            websiteInput: 'https://www.youtube.com/',
             
         }
     },
@@ -12,7 +13,6 @@ const home = Vue.createApp({
             console.log('test')
         },
         loadCurrentUser(){
-            console.log('lets gooo')
             axios({
                 method: 'get',
                 url: '/users/currentuser/'
@@ -25,6 +25,20 @@ const home = Vue.createApp({
                 console.log(error.response)
             })
         },
+        generateQRCode(){
+            let address = this.websiteInput
+            let qrcodeContainer = document.querySelector('#qr-print-div')
+            qrcodeContainer.innerHTML = ''
+            new QRCode(qrcodeContainer, {
+                text: address,
+                width: 300,
+                height: 300,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            })
+            
+        }
     },
     created: function() {
 
