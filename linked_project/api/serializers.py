@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from users.models import CustomUser
 
-from custom_urls.models import URLS, EmergencyName, EmergencyPhoneNumbers, EmergencyAddress
+from custom_urls.models import URLS, EmergencyName, EmergencyPhoneNumbers, EmergencyAddress, NEWURLS
 
 class NestedURLSSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,6 +27,18 @@ class NestedEmergencyAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmergencyAddress
         fields = ('id', 'descriptor', 'street', 'city', 'state', 'zip_code', 'url')
+
+#NEWURLS serialization
+class NestedNEWURLSSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NEWURLS
+        fields = ('id', 'unique_key', 'blob_file', 'author')
+
+class NEWURLSSerializer(serializers.ModelSerializer):
+    author_detail = NestedUserSerializer(read_only=True, source='author')
+    class Meta:
+        model = NEWURLS
+        fields = ('id', 'unique_key', 'blob_file', 'author', 'author_detail')
 
 
 

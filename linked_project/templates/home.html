@@ -5,17 +5,19 @@
 <div id="home" class="bg-[#28282B] text-white min-h-screen">
 
     <div class="flex flex-col items-center text-4xl p-[5rem] ">
+        <div id="canvas"></div>
+        <button @click="test">TEST</button>
         <div class="flex flex-col text-lg">
             <input v-model="websiteInput" type="text" class="m-[2rem] w-[15rem] bg-inherit border">
             <!-- <input type="text" class="m-[2rem] w-[15rem] bg-inherit border"> -->
 
         </div>
 
-        <button @click="generateQRCode">Let's make a QR code!</button>
+        <button @click="codemonkeyAPICall">Let's make a QR code!</button>
 
     </div>
-    <div class="flex justify-center">
-        <div id="qr-print-div" class="flex justify-center border w-fit"></div>
+    <div class="flex justify-center pb-[5rem]">
+        <img id="qr-img" src="" alt="">
     </div>
 
 </div>

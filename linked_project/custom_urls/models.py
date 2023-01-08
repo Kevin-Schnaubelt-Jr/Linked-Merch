@@ -18,6 +18,11 @@ class URLS(models.Model):
     def __str__(self):
         return self.unique_key
 
+class NEWURLS(models.Model):
+    unique_key = models.CharField(max_length=200, unique=True)
+    blob_file = models.CharField(max_length=250)
+    author = models.ForeignKey(CustomUser, related_name="new_urls", on_delete=models.CASCADE)
+
 
 class EmergencyName(models.Model):
     descriptor = models.CharField(max_length=200, null=True)

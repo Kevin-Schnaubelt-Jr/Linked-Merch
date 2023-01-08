@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets
 
-from custom_urls.models import URLS, EmergencyName, EmergencyPhoneNumbers, EmergencyAddress
-from .serializers import URLSSerializer, EmergencyNameSerializer, EmergencyPhoneNumbersSerializer, EmergencyAddressSerializer
+from custom_urls.models import URLS, EmergencyName, EmergencyPhoneNumbers, EmergencyAddress, NEWURLS
+from .serializers import URLSSerializer, EmergencyNameSerializer, EmergencyPhoneNumbersSerializer, EmergencyAddressSerializer, NEWURLSSerializer
 
 class URLSAPIView(generics.ListAPIView):
     queryset = URLS.objects.all()
@@ -34,3 +34,12 @@ class EmergencyAddressAPIView(generics.ListAPIView):
 class PostEmergencyAddressSet(viewsets.ModelViewSet):
     queryset = EmergencyAddress.objects.all()
     serializer_class = EmergencyAddressSerializer
+
+#NEWURLS post classes
+class NEWURLSAPIView(generics.ListAPIView):
+    queryset = NEWURLS.objects.all()
+    serializer_class = NEWURLSSerializer
+
+class PostNEWURLSSet(viewsets.ModelViewSet):
+    queryset = NEWURLS.objects.all()
+    serializer_class = NEWURLSSerializer
