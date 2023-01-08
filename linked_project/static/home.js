@@ -7,6 +7,10 @@ const home = Vue.createApp({
             websiteInput: 'youtube.com',
             newQRCodes: {},
             blobHold: 0,
+
+            dotOption: 'extra-rounded',
+            dotOptionsCounter: 0,
+            dotOptions: ['extra-rounded', 'dots', 'classy', 'classy-rounded', 'square']
             
         }
     },
@@ -20,49 +24,116 @@ const home = Vue.createApp({
             }
             return result
         },
-        test(){
-            const qrCode = new QRCodeStyling({
-                width: 300,
-                height: 300,
-                type: "svg",
-                data: "https://www.facebook.com/",
-                image: "",
-                dotsOptions: {
-                    color: "#4267b2",
-                    type: "rounded"
-                },
-                backgroundOptions: {
-                    color: "#e9ebee",
-                },
-                imageOptions: {
-                    crossOrigin: "anonymous",
-                    margin: 20
-                }
-            });
-        
-            qrCode.append(document.getElementById("canvas"));
-            qrCode.download({ name: "qr", extension: "svg" });
+        changeDots(){
+            console.log('error',this.dotOptions.length)
+            this.dotOptionsCounter++
+            if (this.dotOptionsCounter === this.dotOptions.length){
+                this.dotOptionsCounter = 0
+            }
+            this.dotOption = this.dotOptions[this.dotOptionsCounter]
+            this.test()
         },
-        postNEWQRCode(){
-            console.log('from test', this.blobHold)
-            axios({
-                method: 'post',
-                url: '/api/v1/newURLs/',
-                headers: {
-                    'X-CSRFToken': this.csrfToken
-                },
-                data: {
-                    "unique_key" : this.randomKeyGenerator(),
-                    "blob_file": this.blobHold,
-                    "author": this.currentUser.id,
-                }
-            }).then( response => {
-                this.loadCurrentUser()
-                console.log(response.data)
-            }).catch(error => {
-                console.log(error.response)
-             
-            })
+        test(){
+            // 'http://127.0.0.1:8000/template/0/' development url
+            // 'https://linked-shirts.herokuapp.com/template/0/'
+            const qrCode = new QRCodeStyling({
+                width:300,
+                height:300,
+                type: "svg",
+                data:"https://sites.google.com/view/linkmerch/home",
+                margin:0,
+                qrOptions:{
+                    typeNumber:0,
+                    mode:"Byte",
+                    errorCorrectionLevel:"H"
+                    },
+                    
+                imageOptions:{
+                    hideBackgroundDots:true,
+                    imageSize:0.4,
+                    margin:0
+                    },
+                    
+                dotsOptions:{
+                    type:this.dotOption,
+                    color:"#6a1a4c"
+                    },
+                    
+                backgroundOptions:{
+                    color:"#ffffff"
+                    },
+                    
+                image:"https://lh3.googleusercontent.com/6juaLB5_7Y6gRNGwa6lKyZkbTkN9Dvf0v151HLiH15OJ31ccxeTWTkBjRmQ4ujHXDJwxk-iU0IHs_24KaeFTzCbnnuf5Byn5Km7Z8WFvEWDbiT47LuHgoXiDmca3SLnoajTWw89DlaS31ux1A75l7gIIITsaExJ8Y00Ucnl1yfI8_g=w1280",
+                dotsOptionsHelper:{
+                    colorType:{
+                        single:true,
+                        gradient:false
+                        },
+                    gradient:{
+                        linear:true,
+                        radial:false,
+                        color1:"#6a1a4c",
+                        color2:"#6a1a4c",
+                        rotation:"0"
+                        }
+                    },
+                cornersSquareOptions:{
+                    type:"extra-rounded",
+                    color:"#000000"
+                    },
+                    
+                cornersSquareOptionsHelper:{
+                    colorType:{
+                        single:true,
+                        gradient:false
+                        },
+                    gradient:{
+                        linear:true,
+                        radial:false,
+                        color1:"#000000",
+                        color2:"#000000",
+                        rotation:"0"
+                        }
+                    },
+                    
+                cornersDotOptions:{
+                    type:"extra-rounded",
+                    color:"#000000"
+                    },
+                    
+                cornersDotOptionsHelper:{
+                    colorType:{
+                        single:true,
+                        gradient:false
+                        },
+                    gradient:{
+                        linear:true,
+                        radial:false,
+                        color1:"#000000",
+                        color2:"#000000",
+                        rotation:"0"
+                        }
+                    },
+                    
+                backgroundOptionsHelper:{
+                    colorType:{
+                        single:true,
+                        gradient:false
+                        },
+                    gradient:{
+                        linear:true,
+                        radial:false,
+                        color1:"#ffffff",
+                        color2:"#ffffff",
+                        rotation:"0"
+                        }
+                    }
+            });
+            document.querySelector('#canvas').style.display = "block"
+            document.querySelector('#canvas').innerHTML = ''
+            qrCode.append(document.getElementById("canvas"));
+            // Downloads to computer.
+            // qrCode.download({ name: "qr", extension: "svg" });
         },
         loadCurrentUser(){
             axios({
@@ -92,51 +163,8 @@ const home = Vue.createApp({
              
             })
         },
-        generateQRCode(){
-            let address = this.websiteInput
-            let qrcodeContainer = document.querySelector('#qr-print-div')
-            qrcodeContainer.innerHTML = ''
-            new QRCode(qrcodeContainer, {
-                text: address,
-                width: 300,
-                height: 300,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            })
+        
             
-        },
-        codemonkeyAPICall(){
-            // 'http://127.0.0.1:8000/template/0/' development url
-            // 'https://linked-shirts.herokuapp.com/template/0/'
-            axios({
-                method: 'get',
-                url: 'https://qrcode-monkey.p.rapidapi.com/qr/custom',
-                responseType: 'blob',
-                params: {
-                    data: this.websiteInput,
-                    config: `{"bodyColor": "", "body":"circle", "eye":"frame6", 
-                    "eyeBall":"ball6"}`,
-                    download: 'false',
-                    file: 'png',
-                    size: 300
-                },
-                headers: {
-                    'X-RapidAPI-Key': '5559576162mshf44aea9d971363dp160f38jsn0f074a06d8d0',
-                    'X-RapidAPI-Host': 'qrcode-monkey.p.rapidapi.com'
-                    },
-            }).then(response => {
-                console.log('QR api data',response.data)
-                let magicUrl = URL.createObjectURL(response.data)
-                console.log(document.querySelector('#qr-img').src)
-                
-                document.querySelector('#qr-img').src = magicUrl
-                this.blobHold = response.data
-                console.log('blob hold',typeof this.blobHold, this.blobHold)
-                
-                
-            })
-        }
     },
     created: function() {
 
