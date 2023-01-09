@@ -8,9 +8,26 @@ const home = Vue.createApp({
             newQRCodes: {},
             blobHold: 0,
 
-            dotOption: 'extra-rounded',
+            dotOptionType: 'extra-rounded',
             dotOptionsCounter: 0,
-            dotOptions: ['extra-rounded', 'dots', 'classy', 'classy-rounded', 'square']
+            dotTypes: ['extra-rounded', 'dots', 'classy', 'classy-rounded', 'square'],
+
+            dotOptionColor: '#6a1a4c',
+
+            backgroundOptionColor: "#ffffff",
+
+            cornersSquareOptionType: "extra-rounded",
+            cornersSquareOptionColor: "#000000",
+
+            cornersDotOptionType: "extra-rounded",
+            cornersDotOptionColor: "#000000"
+
+
+
+
+
+
+
             
         }
     },
@@ -24,6 +41,15 @@ const home = Vue.createApp({
             }
             return result
         },
+        test(){
+            qrCode = this.createQRCode()
+            console.log('testing', typeof qrCode, qrCode)
+            document.querySelector('#canvas').style.display = "block"
+            document.querySelector('#canvas').innerHTML = ''
+            qrCode.append(document.getElementById("canvas"));
+            // Downloads to computer.
+            // qrCode.download({ name: "qr", extension: "svg" });
+        },
         changeDots(){
             console.log('error',this.dotOptions.length)
             this.dotOptionsCounter++
@@ -33,7 +59,7 @@ const home = Vue.createApp({
             this.dotOption = this.dotOptions[this.dotOptionsCounter]
             this.test()
         },
-        test(){
+        createQRCode(){
             // 'http://127.0.0.1:8000/template/0/' development url
             // 'https://linked-shirts.herokuapp.com/template/0/'
             const qrCode = new QRCodeStyling({
@@ -41,6 +67,7 @@ const home = Vue.createApp({
                 height:300,
                 type: "svg",
                 data:"https://sites.google.com/view/linkmerch/home",
+                image:"/static/EmbeddedImage.png",
                 margin:0,
                 qrOptions:{
                     typeNumber:0,
@@ -55,15 +82,14 @@ const home = Vue.createApp({
                     },
                     
                 dotsOptions:{
-                    type:this.dotOption,
-                    color:"#6a1a4c"
+                    type: this.dotOptionType,
+                    color: this.dotOptionColor
                     },
                     
                 backgroundOptions:{
-                    color:"#ffffff"
+                    color:this.backgroundOptionColor
                     },
                     
-                image:"https://lh3.googleusercontent.com/6juaLB5_7Y6gRNGwa6lKyZkbTkN9Dvf0v151HLiH15OJ31ccxeTWTkBjRmQ4ujHXDJwxk-iU0IHs_24KaeFTzCbnnuf5Byn5Km7Z8WFvEWDbiT47LuHgoXiDmca3SLnoajTWw89DlaS31ux1A75l7gIIITsaExJ8Y00Ucnl1yfI8_g=w1280",
                 dotsOptionsHelper:{
                     colorType:{
                         single:true,
@@ -78,8 +104,8 @@ const home = Vue.createApp({
                         }
                     },
                 cornersSquareOptions:{
-                    type:"extra-rounded",
-                    color:"#000000"
+                    type: this.cornersSquareOptionType,
+                    color: this.cornersSquareOptionColor
                     },
                     
                 cornersSquareOptionsHelper:{
@@ -97,8 +123,8 @@ const home = Vue.createApp({
                     },
                     
                 cornersDotOptions:{
-                    type:"extra-rounded",
-                    color:"#000000"
+                    type: this.cornersDotOptionType,
+                    color: this.cornersDotOptionColor
                     },
                     
                 cornersDotOptionsHelper:{
@@ -129,11 +155,7 @@ const home = Vue.createApp({
                         }
                     }
             });
-            document.querySelector('#canvas').style.display = "block"
-            document.querySelector('#canvas').innerHTML = ''
-            qrCode.append(document.getElementById("canvas"));
-            // Downloads to computer.
-            // qrCode.download({ name: "qr", extension: "svg" });
+            return qrCode
         },
         loadCurrentUser(){
             axios({
@@ -145,13 +167,13 @@ const home = Vue.createApp({
                 this.qrCount = this.currentUser.urls_detail.length
             }).catch(error => {
               
-                console.log(error.response)
+                console.log('load user errors', error.response)
             })
         },
         loadQRCodes(){
             axios({
                 method: 'get',
-                url: '/api/v1/newURLs/'
+                url: '/api/v1/custom_urls/'
             }).then(response => {
                 this.newQRCodes = response.data
                 console.log('get QR codes', response.data)
@@ -159,7 +181,7 @@ const home = Vue.createApp({
                 }
             ).catch(error => {
     
-                console.log(error.response)
+                console.log('load QR errors', error.response)
              
             })
         },

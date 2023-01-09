@@ -16,7 +16,7 @@ const base = Vue.createApp({
                 this.qrCount = this.currentUser.urls_detail.length
             }).catch(error => {
               
-                console.log(error.response)
+                console.log('load user errors', error.response)
             })
         },
 
