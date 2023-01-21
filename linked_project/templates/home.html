@@ -4,8 +4,13 @@
 {% block content %}
 <div id="home" class="bg-[#28282B] text-white min-h-screen">
 
-    <div v-for="qrCode in currentUser.qr_code_detail">
-        <p>[[qrCode]]</p>
+    <!-- <div v-for="(qrCode, index) in currentUser.qr_code_detail">
+        <div :id="'user-qr-' + index">
+            <p>hello</p>
+        </div>
+    </div> -->
+
+    <div id="user-codes" class="flex flex-wrap justify-evenly p-4">
     </div>
 
     <div class="flex flex-col items-center text-4xl p-[5rem] ">

@@ -2,6 +2,7 @@ const home = Vue.createApp({
     delimiters: ['[[', ']]'],
     data(){
         return{
+            message: 'hello world',
             currentUser: {},
             csrfToken: '',
             websiteInput: 'youtube.com',
@@ -31,6 +32,12 @@ const home = Vue.createApp({
             
         }
     },
+    computed: {
+        reversedMessage: function () {
+            // `this` points to the vm instance
+            return this.message.split('').reverse().join('')
+        }
+    },
     methods: {
         randomKeyGenerator(){
             let result = ''
@@ -41,14 +48,30 @@ const home = Vue.createApp({
             }
             return result
         },
+        test2(){
+            console.log('test2', this.currentUser.qr_code_detail)
+            for (i=0; i < this.currentUser.qr_code_detail.length; i++){
+                this.dotOptionType = this.currentUser.qr_code_detail[i].dot_options_type
+                this.dotOptionColor = this.currentUser.qr_code_detail[i].dot_options_color
+                
+                console.log(this.dotOptionType)
+                qrCode = this.createQRCode()
+                qrCode.append(document.querySelector('#user-codes'));
+
+            }
+        },
         test(){
             qrCode = this.createQRCode()
             console.log('testing', typeof qrCode, qrCode)
             document.querySelector('#canvas').style.display = "block"
             document.querySelector('#canvas').innerHTML = ''
-            qrCode.append(document.getElementById("canvas"));
+            qrCode.append(document.querySelector('#user-codes'));
+            // document.querySelector('#user-qr-0').innerHTML = 'WE DID IT'
             // Downloads to computer.
             // qrCode.download({ name: "qr", extension: "svg" });
+            // qrCode.append(document.querySelector('#user-qr-0'))
+            // console.log('should be a div here', document.querySelector('#user-qr-0'))
+            
         },
         changeDots(){
             console.log('error',this.dotOptions.length)
@@ -63,9 +86,9 @@ const home = Vue.createApp({
             // 'http://127.0.0.1:8000/template/0/' development url
             // 'https://linked-shirts.herokuapp.com/template/0/'
             const qrCode = new QRCodeStyling({
-                width:300,
-                height:300,
-                type: "svg",
+                width:150,
+                height:150,
+                type: "canvas",
                 data:"https://sites.google.com/view/linkmerch/home",
                 image:"/static/EmbeddedImage.png",
                 margin:0,
@@ -164,7 +187,7 @@ const home = Vue.createApp({
             }).then(response => {
                 this.currentUser = response.data
                 console.log('home current user', this.currentUser)
-                this.qrCount = this.currentUser.urls_detail.length
+                this.test2()
             }).catch(error => {
               
                 console.log('load user errors', error.response)
@@ -189,12 +212,13 @@ const home = Vue.createApp({
             
     },
     created: function() {
-
+        
+        console.log('created')
     },
     mounted(){
         this.csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value
-        this.loadCurrentUser()
         this.loadQRCodes()
+        this.loadCurrentUser()
         console.log('home mounted')
 
     }
