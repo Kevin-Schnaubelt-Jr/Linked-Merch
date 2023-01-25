@@ -2,23 +2,45 @@
 {% load static %}
 
 {% block content %}
-<div id="home" class="bg-[#28282B] text-white min-h-screen">
+<div id="home" class="snap-y snap-mandatory overflow-y-scroll bg-[#28282B] text-white h-screen scroll-smooth">
 
-    <!-- <div v-for="(qrCode, index) in currentUser.qr_code_detail">
-        <div :id="'user-qr-' + index">
-            <p>hello</p>
+    <div class="snap-center h-screen pt-[13rem]">
+        <div id="user-codes" class="flex flex-wrap justify-evenly"></div>
+    
+        <div class=" flex flex-col items-center text-4xl p-4">
+            <transition name="fade" mode="out-in" @leave="" @enter="generateAndSnap()">
+                <div v-if="creationTransition == false" class="">
+                    <button @click="makeButton()">MAKEM'!</button>
+                    
+                </div>
+                <div v-else-if="creationTransition">
+
+                </div>
+            </transition>
         </div>
-    </div> -->
+    </div>
+        
+                  
+    
+        
+    <div id="snap-test" class="border snap-center h-screen pt-[10rem] #hidden">
+        <div class="border h-[10rem] text-2xl flex flex-col items-start">
+            <div class="border w-full flex justify-evenly">
+                <button>OPTION 1</button>
+                <button>OPTION 2</button>
+                <button>OPTION 2</button>
+            </div>
+            <div id="options-1">
+                <button>stuff</button>
+            </div>
+            
+        </div>
+        <div id="canvas" class="flex justify-center"></div>
 
-    <div id="user-codes" class="flex flex-wrap justify-evenly p-4">
     </div>
 
-    <div class="flex flex-col items-center text-4xl p-[5rem] ">
-        <div id="canvas" class="border-2 border-black hidden"></div>
-        <button @click="test">TEST</button>
-        <button @click="changeDots">CHANGEM UP</button>
+    
 
-    </div>
 
 </div>
 

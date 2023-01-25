@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<!-- <div >
+<div >
     <h1>!{{key}}!</h1>
-</div> -->
+</div> 
 <!-- <p class="text-center text-[red]">[[currentUser.username]]</p> -->
 {% comment %} "major-print-div" and "nested-major-print-div" are what finds the reveleant information for the current page {% endcomment %}
 <div id="major-print-div" v-for="url in urls" class="md:flex md:justify-center md:text-3xl"> {% comment %} "this loop trys to find which url's unique key matches the '{{key}}', which is the webpage you are currently on {% endcomment %}

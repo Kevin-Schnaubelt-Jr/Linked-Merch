@@ -5,9 +5,12 @@ const home = Vue.createApp({
             message: 'hello world',
             currentUser: {},
             csrfToken: '',
-            websiteInput: 'youtube.com',
+            websiteInput: 'https://linked-shirts.herokuapp.com/',
             newQRCodes: {},
-            blobHold: 0,
+            creationTransition: false,
+            dropDownBool1: false,
+
+            qrCodeSize: 150,
 
             dotOptionType: 'extra-rounded',
             dotOptionsCounter: 0,
@@ -17,11 +20,13 @@ const home = Vue.createApp({
 
             backgroundOptionColor: "#ffffff",
 
-            cornersSquareOptionType: "extra-rounded",
+            cornersSquareOptionType: 'extra-rounded',
             cornersSquareOptionColor: "#000000",
 
-            cornersDotOptionType: "extra-rounded",
-            cornersDotOptionColor: "#000000"
+            cornersDotOptionType: 'extra-rounded',
+            cornersDotOptionColor: "#000000",
+
+            userCodeImage: '',
 
 
 
@@ -48,49 +53,99 @@ const home = Vue.createApp({
             }
             return result
         },
-        test2(){
-            console.log('test2', this.currentUser.qr_code_detail)
+        displayUserQRCodes(){
+            console.log('display codes function', this.currentUser.qr_code_detail[0])
             for (i=0; i < this.currentUser.qr_code_detail.length; i++){
                 this.dotOptionType = this.currentUser.qr_code_detail[i].dot_options_type
                 this.dotOptionColor = this.currentUser.qr_code_detail[i].dot_options_color
-                
-                console.log(this.dotOptionType)
+                this.backgroundOptionColor = this.currentUser.qr_code_detail[i].background_options_color
+                this.cornersSquareOptionType = this.currentUser.qr_code_detail[i].corner_square_options_type
+                this.cornersSquareOptionColor = this.currentUser.qr_code_detail[i].corner_square_options_color
+                this.cornersDotOptionType = this.currentUser.qr_code_detail[i].dot_options_type
+                this.cornersDotOptionColor = this.currentUser.qr_code_detail[i].dot_options_color
+                this.userCodeImage = this.currentUser.qr_code_detail[i].image
+
+                let newDiv = document.createElement('div')
+                newDiv.classList = 'flex flex-col items-center text-4xl'
+                let newElement = document.createElement('p')
+                newElement.innerHTML = 'Click Me!'
                 qrCode = this.createQRCode()
-                qrCode.append(document.querySelector('#user-codes'));
+                // qrCode.append(document.querySelector('#user-codes'));
+                newDiv.append(newElement)
+                qrCode.append(newDiv)
+                document.querySelector('#user-codes').append(newDiv)
+                
+            }
+            
+            console.log('user-codes', document.querySelector('#user-codes'))
+
+            for (i=0; i < document.querySelector('#user-codes').children.length; i++){
+                let eventListenerKey = this.currentUser.qr_code_detail[i].unique_key
+                document.querySelector('#user-codes').children[i].classList.add('cursor-pointer')
+                // document.querySelector('#user-codes').children[i].classList.add('scale-50')
+                document.querySelector('#user-codes').children[i].addEventListener('click', function(){
+                    console.log('inside add event', eventListenerKey)
+                    window.location = 'http://127.0.0.1:8000/template/0/' + eventListenerKey
+                })
 
             }
         },
-        test(){
-            qrCode = this.createQRCode()
-            console.log('testing', typeof qrCode, qrCode)
-            document.querySelector('#canvas').style.display = "block"
-            document.querySelector('#canvas').innerHTML = ''
-            qrCode.append(document.querySelector('#user-codes'));
+        generateAndSnap(){
+            console.log('transition bool', this.creationTransition)
+            if (this.creationTransition){
+                this.setDefaults()
+                this.qrCodeSize = 300
+
+                qrCode = this.createQRCode()
+                console.log('testing', typeof qrCode, qrCode)
+                qrCode.append(document.querySelector('#canvas'))
+                window.location = '#snap-test'
+            }
+            // qrCode.append(document.querySelector('#user-codes'));
             // document.querySelector('#user-qr-0').innerHTML = 'WE DID IT'
             // Downloads to computer.
             // qrCode.download({ name: "qr", extension: "svg" });
-            // qrCode.append(document.querySelector('#user-qr-0'))
             // console.log('should be a div here', document.querySelector('#user-qr-0'))
             
         },
-        changeDots(){
-            console.log('error',this.dotOptions.length)
-            this.dotOptionsCounter++
-            if (this.dotOptionsCounter === this.dotOptions.length){
-                this.dotOptionsCounter = 0
+        makeButton(){
+            document.querySelector('#snap-test').style.display = 'block'
+            this.creationTransition = !this.creationTransition
+        },
+        test4(){
+
+            for (i=0; i<3;i++){
+                let newDiv = document.createElement('div')
+                let newElement = document.createElement('p')
+                newElement.innerHTML = 'Click Me!'
+                let newElement2 = document.createElement('p')
+                newElement2.innerHTML = 'PICTURE'
+    
+                newDiv.append(newElement, newElement2)
+                document.querySelector('#test-div').append(newDiv)
+                console.log('test4', newDiv)
             }
-            this.dotOption = this.dotOptions[this.dotOptionsCounter]
-            this.test()
+            
+
+        },
+        setDefaults(){
+            this.dotOptionType = 'extra-rounded'
+            this.dotOptionColor = '#6a1a4c'
+            this.backgroundOptionColor = "#ffffff"
+            this.cornersSquareOptionType = 'extra-rounded'
+            this.cornersSquareOptionColor = "#000000"
+            this.cornersDotOptionType = 'extra-rounded'
+            this.cornersDotOptionColor = "#000000"
         },
         createQRCode(){
             // 'http://127.0.0.1:8000/template/0/' development url
             // 'https://linked-shirts.herokuapp.com/template/0/'
             const qrCode = new QRCodeStyling({
-                width:150,
-                height:150,
+                width: this.qrCodeSize,
+                height: this.qrCodeSize,
                 type: "canvas",
                 data:"https://sites.google.com/view/linkmerch/home",
-                image:"/static/EmbeddedImage.png",
+                image:this.userCodeImage,
                 margin:0,
                 qrOptions:{
                     typeNumber:0,
@@ -187,7 +242,7 @@ const home = Vue.createApp({
             }).then(response => {
                 this.currentUser = response.data
                 console.log('home current user', this.currentUser)
-                this.test2()
+                this.displayUserQRCodes()
             }).catch(error => {
               
                 console.log('load user errors', error.response)
