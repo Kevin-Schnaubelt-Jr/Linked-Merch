@@ -6,7 +6,6 @@ const home = Vue.createApp({
             currentUser: {},
             csrfToken: '',
             websiteInput: 'https://linked-shirts.herokuapp.com/',
-            newQRCodes: {},
             creationTransition: false,
             dropDownBool1: false,
 
@@ -28,6 +27,8 @@ const home = Vue.createApp({
 
             userCodeImage: '',
 
+            makeQRCodeButtonCheck: 0,
+
 
 
 
@@ -38,10 +39,6 @@ const home = Vue.createApp({
         }
     },
     computed: {
-        reversedMessage: function () {
-            // `this` points to the vm instance
-            return this.message.split('').reverse().join('')
-        }
     },
     methods: {
         randomKeyGenerator(){
@@ -54,7 +51,11 @@ const home = Vue.createApp({
             return result
         },
         displayUserQRCodes(){
-            console.log('display codes function', this.currentUser.qr_code_detail[0])
+            // indicator is used to add an index for adding event listeners
+            let indicator = 0
+            this.qrCodeSize = 150
+            document.querySelector('#user-codes').innerHTML = ''
+            // console.log('display codes function', this.currentUser.qr_code_detail[0])
             for (i=0; i < this.currentUser.qr_code_detail.length; i++){
                 this.dotOptionType = this.currentUser.qr_code_detail[i].dot_options_type
                 this.dotOptionColor = this.currentUser.qr_code_detail[i].dot_options_color
@@ -65,30 +66,58 @@ const home = Vue.createApp({
                 this.cornersDotOptionColor = this.currentUser.qr_code_detail[i].dot_options_color
                 this.userCodeImage = this.currentUser.qr_code_detail[i].image
 
-                let newDiv = document.createElement('div')
-                newDiv.classList = 'flex flex-col items-center text-4xl'
-                let newElement = document.createElement('p')
-                newElement.innerHTML = 'Click Me!'
+                // 'http://127.0.0.1:8000/template/0/' development url
+                // 'https://linked-shirts.herokuapp.com/template/0/'
+                // CAN STAY DEPLOYED LINK
+                this.websiteInput = 'https://linked-shirts.herokuapp.com/template/0/' + this.currentUser.qr_code_detail[i].unique_key
+
+                // make an outer div and style it
+                let topDiv = document.createElement('div')
+                topDiv.classList = 'flex flex-col items-center text-3xl'
+
+                // make a click me! p element
+                let labelElement = document.createElement('p')
+                labelElement.innerHTML = 'Click Me!'
+                topDiv.append(labelElement)
+
+                // make code and put it into a nested div
+                let innerDiv = document.createElement('div')
+                innerDiv.classList.add('cursor-pointer')
                 qrCode = this.createQRCode()
-                // qrCode.append(document.querySelector('#user-codes'));
-                newDiv.append(newElement)
-                qrCode.append(newDiv)
-                document.querySelector('#user-codes').append(newDiv)
+                qrCode.append(innerDiv)
+                let key = this.currentUser.qr_code_detail[i].unique_key
+                innerDiv.addEventListener('click', function(){
+                    window.location = 'http://127.0.0.1:8000/template/0/' + key
+                })
+                topDiv.append(innerDiv)
+
+                // make a delete button and add it to the top div
+                let codeID = this.currentUser.qr_code_detail[i].id
+                let deleteButton = document.createElement('button')
+                deleteButton.classList = 'fa-regular fa-circle-xmark text-2xl'
+                deleteButton.addEventListener('click', function(){
+                    this.test1(codeID)
+                }.bind(this))
+                topDiv.append(deleteButton)
+                document.querySelector('#user-codes').append(topDiv)
+                indicator++
                 
             }
             
-            console.log('user-codes', document.querySelector('#user-codes'))
+            // console.log('user-codes', document.querySelector('#user-codes'))
 
-            for (i=0; i < document.querySelector('#user-codes').children.length; i++){
-                let eventListenerKey = this.currentUser.qr_code_detail[i].unique_key
-                document.querySelector('#user-codes').children[i].classList.add('cursor-pointer')
-                // document.querySelector('#user-codes').children[i].classList.add('scale-50')
-                document.querySelector('#user-codes').children[i].addEventListener('click', function(){
-                    console.log('inside add event', eventListenerKey)
-                    window.location = 'http://127.0.0.1:8000/template/0/' + eventListenerKey
-                })
+            // for (i=0; i < document.querySelector('#user-codes').children.length; i++){
+            //     let eventListenerKey = this.currentUser.qr_code_detail[i].unique_key
+            //     document.querySelector('#user-codes').children[i].classList.add('cursor-pointer')
+            //     // document.querySelector('#user-codes').children[i].classList.add('scale-50')
+            //     document.querySelector('#user-codes').children[i].addEventListener('click', function(){
+            //         console.log('inside add event', eventListenerKey)
+            //         // 'http://127.0.0.1:8000/template/0/' development url
+            //         // 'https://linked-shirts.herokuapp.com/template/0/'
+            //         window.location = 'http://127.0.0.1:8000/template/0/' + eventListenerKey
+            //     })
 
-            }
+            // }
         },
         generateAndSnap(){
             console.log('transition bool', this.creationTransition)
@@ -112,20 +141,36 @@ const home = Vue.createApp({
             document.querySelector('#snap-test').style.display = 'block'
             this.creationTransition = !this.creationTransition
         },
-        test4(){
+        test1(id){
+            console.log('test 1', id)
+            axios({
+                method: 'delete',
+                url: '/api/v1/custom_urls/' + id,
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                }
+            }).then(response => {
+                console.log('QR code deleted')
+                this.loadCurrentUser()
+            }).catch(error => {
+              
+                console.log('delete QR code errors', error.response)
+            })
 
-            for (i=0; i<3;i++){
-                let newDiv = document.createElement('div')
-                let newElement = document.createElement('p')
-                newElement.innerHTML = 'Click Me!'
-                let newElement2 = document.createElement('p')
-                newElement2.innerHTML = 'PICTURE'
-    
-                newDiv.append(newElement, newElement2)
-                document.querySelector('#test-div').append(newDiv)
-                console.log('test4', newDiv)
-            }
+        },
+        test4(){
+            document.querySelector('#options-1').classList = 'flex justify-evenly flex-wrap w-full h-full border border-red-400'
             
+        },
+        styleQRCode(option){
+            console.log('option', typeof option, option)
+            document.querySelector('#canvas').innerHTML = ''
+            if (option === 'dots'){
+                this.dotOptionType = 'dots'
+            }
+            qrCode = this.createQRCode()
+            qrCode.append(document.querySelector('#canvas'))
+
 
         },
         setDefaults(){
@@ -136,6 +181,37 @@ const home = Vue.createApp({
             this.cornersSquareOptionColor = "#000000"
             this.cornersDotOptionType = 'extra-rounded'
             this.cornersDotOptionColor = "#000000"
+            this.userCodeImage = "/static/EmbeddedImage.png"
+        },
+        saveQRCode(){
+            document.querySelector('#snap-test').style.display = 'none'
+            axios({
+                method: 'post',
+                url: '/api/v1/custom_urls/',
+                headers: {
+                    'X-CSRFToken': this.csrfToken
+                },
+                data: {
+                    'unique_key': this.randomKeyGenerator(),
+                    'author': this.currentUser.id,
+                    'dot_options_type': this.dotOptionType,
+                    'dot_options_color': this.dotOptionColor,
+                    'background_options_color': this.backgroundOptionColor,
+                    'corner_square_options_type': this.cornersSquareOptionType,
+                    'corner_square_options_color': this.cornersSquareOptionColor,
+                    'corner_dot_options_type': this.cornersDotOptionType,
+                    'corner_dot_options_color': this.cornersDotOptionColor,
+                    'image': this.userCodeImage
+
+
+                }
+            }).then(response => {
+                console.log(response.data)
+                this.loadCurrentUser()
+            }).catch(error => {
+                console.log(error.response)
+             
+            })
         },
         createQRCode(){
             // 'http://127.0.0.1:8000/template/0/' development url
@@ -144,7 +220,7 @@ const home = Vue.createApp({
                 width: this.qrCodeSize,
                 height: this.qrCodeSize,
                 type: "canvas",
-                data:"https://sites.google.com/view/linkmerch/home",
+                data: this.websiteInput,
                 image:this.userCodeImage,
                 margin:0,
                 qrOptions:{
@@ -242,27 +318,14 @@ const home = Vue.createApp({
             }).then(response => {
                 this.currentUser = response.data
                 console.log('home current user', this.currentUser)
+                this.makeQRCodeButtonCheck = this.currentUser.qr_code_detail.length
                 this.displayUserQRCodes()
             }).catch(error => {
               
                 console.log('load user errors', error.response)
             })
         },
-        loadQRCodes(){
-            axios({
-                method: 'get',
-                url: '/api/v1/custom_urls/'
-            }).then(response => {
-                this.newQRCodes = response.data
-                console.log('get QR codes', response.data)
-                
-                }
-            ).catch(error => {
-    
-                console.log('load QR errors', error.response)
-             
-            })
-        },
+        
         
             
     },
@@ -272,7 +335,6 @@ const home = Vue.createApp({
     },
     mounted(){
         this.csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value
-        this.loadQRCodes()
         this.loadCurrentUser()
         console.log('home mounted')
 
