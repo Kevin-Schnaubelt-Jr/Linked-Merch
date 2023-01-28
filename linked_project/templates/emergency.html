@@ -1,98 +1,91 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+<div id="emergency" class="flex flex-col items-center pt-[10rem] text-2xl">
 
-<!-- <div >
-    <h1>!{{key}}!</h1>
-</div> -->
-<!-- <p class="text-center text-[red]">[[currentUser.username]]</p> -->
-{% comment %} "major-print-div" and "nested-major-print-div" are what finds the reveleant information for the current page {% endcomment %}
-<div id="major-print-div" v-for="url in urls" class="md:flex md:justify-center md:text-3xl"> {% comment %} "this loop trys to find which url's unique key matches the '{{key}}', which is the webpage you are currently on {% endcomment %}
-    <div id="nested-major-print-div" v-if="url.unique_key === '{{key}}'" class=" p-[1rem]">
-        <p id="page-key"  class="hidden">[[url.id]]</p> {% comment %} VERY IMPORTANT. "page-key" div is what allows us to refernce the url.id in javascript for making api calls currectly. {% endcomment %}
-        <div id="print-name-div" v-for="person in url.name_detail">
-            <p >
-                [[person.descriptor]]
-                <span>[[person.name]]</span>
-            </p>
-            <button v-if="url.author_detail.username == currentUser.username" @click="deleteName(person.id)" class="fa-regular fa-circle-xmark" ></button>
-        </div>
-        <div id="name-create-field" class="flex justify-center">
-            <button id="new-emergency-name-button" v-if="url.author_detail.username == currentUser.username" @click="newNameInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">Add a name!</button>
-            <div id="make-new-emergency-name-div" class="hidden">
-                <input type="text" v-model="emergencyNameDescriptorInputField"  placeholder="descriptor" class="border bg-inherit"></input>
-                <input type="text" v-model="emergencyNameInputField" placeholder="name" class="border bg-inherit"></input>
-                <button  @click="createName(pageKeyid)">submit</button>
+    <div class="">
+        <!-- <h1>!!!! {{key}} !!!!</h1> -->
+        <p id="page-key"  class="hidden">{{key}}</p>
+    </div>
+    <div id="major-print-div" v-for="code in gotQRCodes" class="w-[95%]">
+        <div id="major-print-conditional" v-if="code.unique_key === '{{key}}'">
+            <!-- <h1>[[code.unique_key]]</h1> -->
+
+            <div id="print-name-div" v-for="person in code.name_detail" class="pt-[1rem]">
+                <p >
+                    [[person.descriptor]]
+                    <span>[[person.name]]</span>
+                    <button @click="deleteEmergency('emergency_names/', person.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
+                </p>
             </div>
-        
-        </div>
-        <div id="print-phones-div" v-for="(phone, index) in emergencyPhones">
-            <div v-if="phone.url == url.id">
+
+            <div id="name-create-field" v-if="code.author_detail.username == currentUser.username" class="flex flex-col items-center pt-[1rem]">
+                <button id="new-emergency-name-button"  @click="createName('{{key}}')" class="border rounded bg-[blue] text-[white] text-center w-[10rem] p-[0.5rem] ">Add name!</button>
+                <div id="make-new-emergency-name-div" class="hidden pt-[0.5rem]">
+                    <input type="text" v-model="emergencyNameDescriptorInputField"  placeholder="descriptor" class="border bg-inherit "></input>
+                    <input type="text" v-model="emergencyNameInputField" placeholder="name" class="border bg-inherit"></input>
+                    <button  @click="createName(code.id)" class="pt-[0.5rem]">submit</button>
+                </div>    
+            </div>
+
+            <div id="print-phone-div" v-for="(phone, index) in code.phone_detail" class="pt-[1rem]">
                 <p >
                     [[phone.descriptor]]
-                    <span >[[phone.formatted_phone]]</span>
-                    
+                    <span>[[ formattedPhones[index] ]]</span>
+                    <button @click="deleteEmergency('emergency_phones/', phone.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
+
                 </p>
-                <button v-if="url.author_detail.username == currentUser.username" @click="deletePhoneNumber(phone.id)" class="fa-regular fa-circle-xmark" ></button>
-            </div>
-        </div>
-        <div id="phone-create-field" class="flex justify-center">
-            <button id="new-emergency-phone-button" v-if="url.author_detail.username == currentUser.username" @click="newPhoneInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem] flex">Add a phone!</button>
-            <div id="make-new-emergency-phone-div" class="hidden">
-                <input type="text" v-model="emergencyPhoneDescriptorInputField"  placeholder="descriptor" class="border bg-inherit"></input>
-                <input type="text" v-model="emergencyPhoneInputField" placeholder="enter phone number" type="tel" class="border bg-inherit"></input>
-                <button  @click="createPhoneNumber(pageKeyid)">submit</button>
             </div>
 
-        </div>
-        <div id="print-name-div" v-for="address in url.address_detail">
-            <p>[[address.descriptor]]</p>
-            <p>[[address.street]]</p>
-            <p>
+            <div id="phone-create-field" v-if="code.author_detail.username == currentUser.username" class="flex flex-col items-center pt-[1rem]">
+                <button id="new-emergency-phone-button"  @click="createPhone('{{key}}')" class="border rounded bg-[blue] text-[white] text-center w-[10rem] p-[0.5rem] ">Add number!</button>
+                <div id="make-new-emergency-phone-div" class="hidden pt-[0.5rem]">
+                    <input type="text" v-model="emergencyPhoneDescriptorInputField"  placeholder="descriptor" class="border bg-inherit "></input>
+                    <input type="text" v-model="emergencyPhoneInputField" placeholder="phone number" class="border bg-inherit"></input>
+                    <button  @click="createPhone(code.id)" class="pt-[0.5rem]">submit</button>
+                </div>    
+            </div>
+
+            <div id="print-address-div" v-for="address in code.address_detail" class="pt-[1rem]">
+                <p>[[address.descriptor]]</p>
+                <p>[[address.street]]</p>
+                <p>
                 [[address.city]]
                 <span>[[address.state]]</span>
-            </p>
-            <p>[[address.zip_code]]</p>
-            <button v-if="url.author_detail.username == currentUser.username" @click="deleteAddress(address.id)" class="fa-regular fa-circle-xmark" ></button>
-        </div>
-        <div id="address-create-field" class="flex justify-center">
-            <button id="new-emergency-address-button" v-if="url.author_detail.username == currentUser.username" @click="newAddressInputFieldReveal" class="border rounded text-center bg-[blue] text-[white] p-[0.5rem] m-[1rem]">Add an address!</button>
-            <div id="make-new-emergency-address-div" class="hidden">
-                <input type="text" v-model="emergencyAddressDescriptorInputField"  placeholder="descriptor" class="border bg-inherit "></input>
-                <input type="text" v-model="emergencyAddressStreetField" placeholder="enter street"  class="border bg-inherit"></input>
-                <input type="text" v-model="emergencyAddressCityField" placeholder="enter city"  class="border bg-inherit"></input>
-                <input type="text" v-model="emergencyAddressStateField" placeholder="enter state"  class="border bg-inherit"></input>
-                <input type="text" v-model="emergencyAddressZipCodeField" placeholder="enter zip code"  class="border bg-inherit"></input>
-                <button  @click="createAddress(pageKeyid)">submit</button>
+                </p>
+                <p>[[address.zip_code]]</p>
+                <button @click="deleteEmergency('emergency_address/', address.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
+
             </div>
 
-        </div>
-        
-    </div>
-</div>
-
-<div id="emergency-qr-display" v-for="uhg in urls">
-    <div v-if="uhg.unique_key === '{{key}}'">
-        <div class=" flex justify-center">
-            <img id="emergency-qr-img" :src="getQRcode(3, 0, uhg, 0)" alt="" class="mb-4">
-           
+            <div id="address-create-field" class="flex justify-center" v-if="code.author_detail.username == currentUser.username" class="flex flex-col items-center pt-[1rem]">
+                <button id="new-emergency-address-button"  @click="createAddress('{{key}}')" class="border rounded bg-[blue] text-[white] text-center w-[10rem] p-[0.5rem] ">Add address!</button>
+                <div id="make-new-emergency-address-div" class="hidden">
+                    <input type="text" v-model="emergencyAddressDescriptorInputField"  placeholder="descriptor" class="border bg-inherit "></input>
+                    <input type="text" v-model="emergencyAddressStreetField" placeholder="enter street"  class="border bg-inherit"></input>
+                    <input type="text" v-model="emergencyAddressCityField" placeholder="enter city"  class="border bg-inherit"></input>
+                    <input type="text" v-model="emergencyAddressStateField" placeholder="enter state"  class="border bg-inherit"></input>
+                    <input type="text" v-model="emergencyAddressZipCodeField" placeholder="enter zip code"  class="border bg-inherit"></input>
+                    <button  @click="createAddress(code.id)" class="pt-[0.5rem]">submit</button>
+                </div>
+            </div>
     
-        </div>
 
+        </div>
     </div>
+
+    <div id="canvas" class="flex justify-center pt-[2rem]" ></div>
+
+
 </div>
 
 
+<!-- Import file.js -->
+<script src="{% static '/emergency.js' %}"></script> 
 
-
-
-
-
-
-
-
-
-
+<!-- Mount App -->
+<script> const mountAppHome = emergency.mount('#emergency') </script>
 
 
 {% endblock content %}

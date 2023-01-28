@@ -1,15 +1,15 @@
 from rest_framework import generics, viewsets
 
-from custom_urls.models import URLS, EmergencyName, EmergencyPhoneNumbers, EmergencyAddress
-from .serializers import URLSSerializer, EmergencyNameSerializer, EmergencyPhoneNumbersSerializer, EmergencyAddressSerializer
+from custom_urls.models import EmergencyQR, EmergencyName, EmergencyPhoneNumbers, EmergencyAddress
+from .serializers import EmergencyQRSerializer, EmergencyNameSerializer, EmergencyPhoneNumbersSerializer, EmergencyAddressSerializer
 
-class URLSAPIView(generics.ListAPIView):
-    queryset = URLS.objects.all()
-    serializer_class = URLSSerializer
+class EmergencyQRAPIView(generics.ListAPIView):
+    queryset = EmergencyQR.objects.all()
+    serializer_class = EmergencyQRSerializer
 
-class PostURLSSet(viewsets.ModelViewSet):
-    queryset = URLS.objects.all()
-    serializer_class = URLSSerializer
+class PostEmergencyQRSet(viewsets.ModelViewSet):
+    queryset = EmergencyQR.objects.all()
+    serializer_class = EmergencyQRSerializer
 
 class EmergencyNameAPIView(generics.ListAPIView):
     queryset = EmergencyName.objects.all()
