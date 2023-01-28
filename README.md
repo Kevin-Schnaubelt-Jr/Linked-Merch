@@ -15,7 +15,7 @@ Their QR codes are then placed on the item and shipped to the customer.
 
 ## Data Model
 
-***models listed are for 3 week milestone***
+***models listed are out of date***
 #### CustomUserModel
 - username *CharField*
 - first name *CharField*
