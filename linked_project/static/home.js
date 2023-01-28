@@ -87,7 +87,7 @@ const home = Vue.createApp({
                 qrCode.append(innerDiv)
                 let key = this.currentUser.qr_code_detail[i].unique_key
                 innerDiv.addEventListener('click', function(){
-                    window.location = 'http://127.0.0.1:8000/template/0/' + key
+                    window.location = 'https://linked-shirts.herokuapp.com/template/0/' + key
                 })
                 topDiv.append(innerDiv)
 
