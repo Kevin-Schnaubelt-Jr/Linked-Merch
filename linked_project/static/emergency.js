@@ -61,12 +61,12 @@ const emergency = Vue.createApp({
         },
         displayQRCode(){
             if (this.displayQRCodeBool){
-                console.log('test', document.querySelector('#page-key').innerHTML)
+                // console.log('test', document.querySelector('#page-key').innerHTML)
                 pageKey = document.querySelector('#page-key').innerHTML
                 for (i=0; i < this.gotQRCodes.length; i++){
                     // console.log('keys', this.gotQRCodes[i].unique_key)
                     if (this.gotQRCodes[i].unique_key === pageKey){
-                        console.log('SUCESSS', this.gotQRCodes[i])
+                        // console.log('SUCESSS', this.gotQRCodes[i])
     
                         this.dotOptionType = this.gotQRCodes[i].dot_options_type
                         this.dotOptionColor = this.gotQRCodes[i].dot_options_color
@@ -100,7 +100,7 @@ const emergency = Vue.createApp({
                 
             }
             else {
-                console.log('key', typeof key, key)
+                // console.log('key', typeof key, key)
                 axios({
                     method: 'post',
                     url: '/api/v1/emergency_names/',
@@ -133,13 +133,13 @@ const emergency = Vue.createApp({
             let nameInputDiv = document.querySelector('#make-new-emergency-phone-div')
             let nameButton = document.querySelector('#new-emergency-phone-button')
             if (this.createPhoneBool){
-                console.log('true')
+                // console.log('true')
                 nameInputDiv.style.display = 'block'
                 nameButton.style.display = 'none'
                 
             }
             else {
-                console.log('key', typeof key, key)
+                // console.log('key', typeof key, key)
                 axios({
                     method: 'post',
                     url: '/api/v1/emergency_phones/',
@@ -172,13 +172,13 @@ const emergency = Vue.createApp({
             let nameInputDiv = document.querySelector('#make-new-emergency-address-div')
             let nameButton = document.querySelector('#new-emergency-address-button')
             if (this.createAddressBool){
-                console.log('true')
+                // console.log('true')
                 nameInputDiv.style.display = 'block'
                 nameButton.style.display = 'none'
                 
             }
             else {
-                console.log('key', typeof key, key)
+                // console.log('key', typeof key, key)
                 axios({
                     method: 'post',
                     url: '/api/v1/emergency_address/',
@@ -211,7 +211,7 @@ const emergency = Vue.createApp({
             this.createAddressBool = !this.createAddressBool
         },
         loadCurrentUser(){
-            console.log('lets gooo')
+            // console.log('lets gooo')
             axios({
                 method: 'get',
                 url: '/users/currentuser/'
@@ -354,11 +354,11 @@ const emergency = Vue.createApp({
         formatPhones(){
             // loop though the current phones, then loop though the individual phone string.
             // build a formatted string as you do so and then store it in a new variable to loop through on the dom. 
-            console.log('current phones', this.currentPhones)
+            // console.log('current phones', this.currentPhones)
             let new_string_build = ''
             for (let i=0; i < this.currentPhones.length; i++){
                 new_string_build = '('
-                console.log('currnet stringlength', this.currentPhones[i].length)
+                // console.log('currnet stringlength', this.currentPhones[i].length)
                 for (let x=0; x < this.currentPhones[i].length; x++){
                     // console.log(this.emergencyPhones[i].phone_number[x])
                     if (x > 1){

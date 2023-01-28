@@ -16,7 +16,7 @@
                 <p >
                     [[person.descriptor]]
                     <span>[[person.name]]</span>
-                    <button @click="deleteEmergency('emergency_names/', person.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
+                    <button v-if="code.author_detail.username == currentUser.username" @click="deleteEmergency('emergency_names/', person.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
                 </p>
             </div>
 
@@ -33,7 +33,7 @@
                 <p >
                     [[phone.descriptor]]
                     <span>[[ formattedPhones[index] ]]</span>
-                    <button @click="deleteEmergency('emergency_phones/', phone.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
+                    <button v-if="code.author_detail.username == currentUser.username" @click="deleteEmergency('emergency_phones/', phone.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
 
                 </p>
             </div>
@@ -55,7 +55,7 @@
                 <span>[[address.state]]</span>
                 </p>
                 <p>[[address.zip_code]]</p>
-                <button @click="deleteEmergency('emergency_address/', address.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
+                <button v-if="code.author_detail.username == currentUser.username" @click="deleteEmergency('emergency_address/', address.id)" class="fa-regular fa-circle-xmark pl-[1rem]"></button>
 
             </div>
 
