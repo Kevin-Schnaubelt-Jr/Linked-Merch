@@ -28,14 +28,10 @@ Their QR codes are then placed on the item and shipped to the customer.
 - template_key *IntegerField*
 - *nested ***Custom Users***
 
-## Schedule
+## TODO
+- finish customizing QR codes
+- add dialoge box to delete requests
+- add margin to the bottom of emergency qr code
+- use tiny url API to shorten codes
 
-#### WEEK 1 ( Due Monday, December 12)
-- Complete Django intilization with Custom User and Custom URL models created.
 
-#### WEEK 2 (Due Monday, December 19)
-- Complete intial template and hook up dynamic URL path navigation.
-
-#### Week 3 (Due Friday, December 23)
-- Deploy Demo
-- Start basic styling
