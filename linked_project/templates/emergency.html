@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div id="emergency" class="flex flex-col items-center pt-[10rem] text-2xl bg-[#28282B] text-white">
+<div id="emergency" class="flex flex-col items-center pt-[10rem] text-2xl text-white h-screen bg-contain bg-fixed">
 
     <div class="">
         <!-- <h1>!!!! {{key}} !!!!</h1> -->
@@ -59,7 +59,7 @@
 
             </div>
 
-            <div id="address-create-field" class="flex justify-center" v-if="code.author_detail.username == currentUser.username" class="flex flex-col items-center pt-[1rem]">
+            <div id="address-create-field"  v-if="code.author_detail.username == currentUser.username" class="flex flex-col items-center pt-[1rem]">
                 <button id="new-emergency-address-button"  @click="createAddress('{{key}}')" class="border rounded bg-[blue] text-[white] text-center w-[10rem] p-[0.5rem] ">Add address!</button>
                 <div id="make-new-emergency-address-div" class="hidden">
                     <input type="text" v-model="emergencyAddressDescriptorInputField"  placeholder="descriptor" class="border bg-inherit "></input>
@@ -75,7 +75,8 @@
         </div>
     </div>
 
-    <div id="canvas" class="flex justify-center pt-[2rem]" ></div>
+    <div id="canvas" class="flex justify-center py-[3rem]" ></div>
+    
 
 
 </div>

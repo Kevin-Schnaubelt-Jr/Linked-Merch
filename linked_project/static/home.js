@@ -68,7 +68,8 @@ const home = Vue.createApp({
 
                 // 'http://127.0.0.1:8000/template/0/' development url
                 // 'https://linked-shirts.herokuapp.com/template/0/'
-                // CAN STAY DEPLOYED LINK
+                // must change before deploying/ before developing
+                // MODE= deploy
                 this.websiteInput = 'https://linked-shirts.herokuapp.com/template/0/' + this.currentUser.qr_code_detail[i].unique_key
 
                 // make an outer div and style it
@@ -86,6 +87,7 @@ const home = Vue.createApp({
                 qrCode = this.createQRCode()
                 qrCode.append(innerDiv)
                 let key = this.currentUser.qr_code_detail[i].unique_key
+                // MODE= deploy
                 innerDiv.addEventListener('click', function(){
                     window.location = 'https://linked-shirts.herokuapp.com/template/0/' + key
                 })
