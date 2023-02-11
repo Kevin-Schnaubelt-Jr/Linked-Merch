@@ -31,7 +31,8 @@ Their QR codes are then placed on the item and shipped to the customer.
 ## TODO
 - finish customizing QR codes
 - add dialoge box to delete requests
-- add margin to the bottom of emergency qr code
 - use tiny url API to shorten codes
+- add proxy to emergency addresses
+- add restaurant menu
 
 
