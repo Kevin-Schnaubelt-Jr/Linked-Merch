@@ -34,5 +34,6 @@ Their QR codes are then placed on the item and shipped to the customer.
 - use tiny url API to shorten codes
 - add proxy to emergency addresses
 - add restaurant menu
+- add a home button to nav
 
 
