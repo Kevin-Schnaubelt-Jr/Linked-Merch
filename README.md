@@ -13,7 +13,7 @@ The user will be able to browse the marketplace from the homepage. From there, t
 All the items in the store have locations where a QR code is displayed. Upon purchase of an item, a user picks one of their QR codes to be dispalyed on the item. 
 Their QR codes are then placed on the item and shipped to the customer.
 
-## Data Model
+<!-- ## Data Model
 
 ***models listed are out of date***
 #### CustomUserModel
@@ -26,7 +26,7 @@ Their QR codes are then placed on the item and shipped to the customer.
 #### CustomURLs
 - unique_key *CharField*
 - template_key *IntegerField*
-- *nested ***Custom Users***
+- *nested ***Custom Users*** -->
 
 ## TODO
 - finish customizing QR codes
