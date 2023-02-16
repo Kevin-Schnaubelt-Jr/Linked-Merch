@@ -35,5 +35,6 @@ Their QR codes are then placed on the item and shipped to the customer.
 - add proxy to emergency addresses
 - add restaurant menu
 - add a home button to nav
+- move looping out of emergency.html into emergency.js
 
 
