@@ -378,17 +378,20 @@ const emergency = Vue.createApp({
 
         },
         deleteEmergency(url, id){
-            
-            axios({
-                method: 'delete',
-                url: '/api/v1/' + url + id,
-                headers: {
-                    'X-CSRFToken': this.csrfToken
-                }
-            }).then(response => {
-                console.log('name deleted')
-                this.loadQRCodes()
-            })
+            console.log('fug?')
+            if (confirm('Are you sure you want to delete this?')){
+                
+                axios({
+                    method: 'delete',
+                    url: '/api/v1/' + url + id,
+                    headers: {
+                        'X-CSRFToken': this.csrfToken
+                    }
+                }).then(response => {
+                    console.log('name deleted')
+                    this.loadQRCodes()
+                })
+            }
         }
     },
     created: function() {
