@@ -98,7 +98,7 @@ const home = Vue.createApp({
                 let deleteButton = document.createElement('button')
                 deleteButton.classList = 'fa-regular fa-circle-xmark text-2xl'
                 deleteButton.addEventListener('click', function(){
-                    this.test1(codeID)
+                    this.deleteQRCode(codeID)
                 }.bind(this))
                 topDiv.append(deleteButton)
                 document.querySelector('#user-codes').append(topDiv)
@@ -143,22 +143,26 @@ const home = Vue.createApp({
             document.querySelector('#snap-test').style.display = 'block'
             this.creationTransition = !this.creationTransition
         },
-        test1(id){
-            console.log('test 1', id)
-            axios({
-                method: 'delete',
-                url: '/api/v1/custom_urls/' + id,
-                headers: {
-                    'X-CSRFToken': this.csrfToken
-                }
-            }).then(response => {
-                console.log('QR code deleted')
-                this.loadCurrentUser()
-            }).catch(error => {
-              
-                console.log('delete QR code errors', error.response)
-            })
+        deleteQRCode(id){
+            if (confirm('Are you sure you want to delete this?')){
 
+                
+                console.log('test 1', id)
+                axios({
+                    method: 'delete',
+                    url: '/api/v1/custom_urls/' + id,
+                    headers: {
+                        'X-CSRFToken': this.csrfToken
+                    }
+                }).then(response => {
+                    console.log('QR code deleted')
+                    this.loadCurrentUser()
+                }).catch(error => {
+                    
+                    console.log('delete QR code errors', error.response)
+                })
+            }
+                
         },
         test4(){
             document.querySelector('#options-1').classList = 'flex justify-evenly flex-wrap w-full h-full border border-red-400'
