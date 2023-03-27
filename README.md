@@ -1,5 +1,7 @@
 ![link merch plash image](linkmerchsplash.png)
 
+https://linked-shirts.herokuapp.com/
+
 ## Project Overview
 
 This website will allow users to purchase items (cloths, stickers, etc.) and with those items, generate a unique QR code that will be displayed along with the designs of the item. The website will generate a page associated with that QR code with a chosen template that the user will be able to access and edit, giving them a personalized webpage to share with anyone that scans their item.
