@@ -29,6 +29,10 @@ const home = Vue.createApp({
 
             makeQRCodeButtonCheck: 0,
 
+            test_random: 11223344,
+
+            saveErrorCount: 0,
+
 
 
 
@@ -51,7 +55,7 @@ const home = Vue.createApp({
             return result
         },
         displayUserQRCodes(){
-            // indicator is used to add an index for adding event listeners
+            // indicator is used to add an index for adding event listeners. Doesn't appear to do anything.
             let indicator = 0
             this.qrCodeSize = 150
             document.querySelector('#user-codes').innerHTML = ''
@@ -190,6 +194,7 @@ const home = Vue.createApp({
             this.userCodeImage = "/static/EmbeddedImage.png"
         },
         saveQRCode(){
+            this.creationTransition = false
             document.querySelector('#snap-test').style.display = 'none'
             axios({
                 method: 'post',
@@ -216,6 +221,15 @@ const home = Vue.createApp({
                 this.loadCurrentUser()
             }).catch(error => {
                 console.log(error.response)
+                // if there is an error, likely due to the rare instance of a duplicate unique_key, run the api call again, but only once, then prompt the user to refresh the page.
+                if (this.saveErrorCount < 1){
+                    this.saveErrorCount++
+                    this.saveQRCode()
+                } else {
+                    // disable saveQRCode function if code reaches this else statement.
+                    this.saveQRCode = function(){}
+                    alert('There was an error saving your QR code. Please refresh the page and try again.')
+                }
              
             })
         },
@@ -325,6 +339,7 @@ const home = Vue.createApp({
                 this.currentUser = response.data
                 console.log('home current user', this.currentUser)
                 this.makeQRCodeButtonCheck = this.currentUser.qr_code_detail.length
+                console.log('makeQRCodeButtonCheck', this.makeQRCodeButtonCheck)
                 this.displayUserQRCodes()
             }).catch(error => {
               
