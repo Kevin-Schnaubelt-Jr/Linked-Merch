@@ -4,40 +4,20 @@ https://linked-shirts.herokuapp.com/
 
 ## Project Overview
 
-This website will allow users to purchase items (cloths, stickers, etc.) and with those items, generate a unique QR code that will be displayed along with the designs of the item. The website will generate a page associated with that QR code with a chosen template that the user will be able to access and edit, giving them a personalized webpage to share with anyone that scans their item.
+This website will provides users with the ability to purchase a range of items, including clothing and stickers, among other things. Each item purchased generates a unique QR code that will be displayed alongside the design of the product. The website will then automatically generate a personalized webpage that corresponds with the QR code and utilizes a template of the user's choice. Users can then access and edit their webpage, allowing them to create a customized digital platform to share with anyone who scans their item.
 
-Whether it's a business card that links to a more verbose page about who they are along with their social media links, a sticker sold locally by an artist that contains their music or a gallery of their art, a shirt for kids that contains emergency contact information in case they get lost, or just an advertisement for your local business on the back of your shirt that someone can scan while waiting behind you in line, the website will allow anyone to incorporate technology into their everyday things.
+The potential uses of this platform are endless, from creating a business card that links to a more comprehensive online profile to a local artist selling stickers that redirect to their music or artwork gallery. Parents can even create custom shirts for their children that display emergency contact information. In addition, this platform offers businesses the ability to advertise their services with unique QR codes placed on clothing items, which customers can scan while waiting in line or browsing around. Ultimately, this website provides a user-friendly and accessible way for anyone to incorporate technology into their everyday items.
 
 ## Functionality
 
-The user will be able to browse the marketplace from the homepage. From there, they can also sign up or log into their account. On their profile page, they will be able to generate unique URL paths to chosen templates. When they do so, a link to those URL paths will be provided, as well as a QR code image associated with the path that may be saved and used as desired.  On those pages, the users who created them will be able to edit the template that renders on the page. Anyone with a link to the page will be able to see what information its author has filled out there.
+The homepage provides users with access to the marketplace, where they can browse available items. They can also sign up or log in to their account. Once logged in, users can access their profile page, where they can generate unique URL paths using a template of their choice. The website will provide both a link to the URL path and a QR code image associated with it, which can be saved and shared as desired. Users can edit the content on these pages to create a personalized digital platform.
 
-All the items in the store have locations where a QR code is displayed. Upon purchase of an item, a user picks one of their QR codes to be dispalyed on the item. 
-Their QR codes are then placed on the item and shipped to the customer.
+Visitors who have access to the URL path or scan the QR code will be able to view the content that the user has added to their page.
 
-<!-- ## Data Model
+When purchasing an item from the store, users will be prompted to select one of their generated QR codes to be associated with the item. The QR code will then be displayed on the item and shipped to the customer.
 
-***models listed are out of date***
-#### CustomUserModel
-- username *CharField*
-- first name *CharField*
-- last name *CharField*
-- email *EmailField*
-- *nested ***Custom Urls****
+## Current State
 
-#### CustomURLs
-- unique_key *CharField*
-- template_key *IntegerField*
-- *nested ***Custom Users*** -->
-
-## TODO
-- finish customizing QR codes
-- <strike>add dialogue box to delete requests</strike>
-- use tiny url API to shorten codes
-- add proxy to emergency addresses
-- add restaurant menu
-- add a home button to nav
-- move looping out of emergency.html into emergency.js
-- use custom account generation
+Users can create an account have access to the ability to generate up to four unique QR codes. Once generated, these QR codes can be used to direct scanners to an emergency contact list that the user has populated with their own information. These codes are easily shareable and can be saved by the user via simple right click and save. When accessed, the QR code will redirect the scanner to the corresponding user-generated page, allowing them to access the information provided by the account holder.
 
 
